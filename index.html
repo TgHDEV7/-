@@ -314,12 +314,27 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 .pg-pad{padding:26px 28px}
 
 /* ═══ HOME PAGE ═══ */
-.home-hero{border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(135deg,hsl(var(--hue),50%,96%),hsl(var(--hue),40%,92%));border:1px solid var(--border);margin-bottom:22px;padding:40px 32px;text-align:center}
-[data-theme="dark"] .home-hero{background:linear-gradient(135deg,hsl(var(--hue),30%,14%),hsl(var(--hue),25%,10%))}
-.home-hero h1{font-family:'Kanit',sans-serif;font-size:clamp(20px,3vw,30px);font-weight:800;color:var(--t1);margin-bottom:4px}
-.home-hero p{color:var(--t3);font-size:14px}
-.home-hero .h-date{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;font-weight:600;color:var(--t2);margin-top:14px}
-.home-hero .h-date .blink{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse-dot 2s infinite}
+.home-hero{border-radius:20px;overflow:hidden;position:relative;background:#0f766e;border:none;margin-bottom:22px;padding:56px 32px 48px;text-align:center}
+.home-hero::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 80% at 15% 80%,rgba(20,184,166,.6) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 70% at 85% 20%,rgba(59,130,246,.35) 0%,transparent 55%),
+  radial-gradient(ellipse 40% 60% at 50% 50%,rgba(16,185,129,.25) 0%,transparent 50%),
+  radial-gradient(ellipse 80% 50% at 70% 90%,rgba(6,182,212,.3) 0%,transparent 50%);pointer-events:none}
+.home-hero::after{content:'';position:absolute;inset:0;background:
+  radial-gradient(circle 80px at 18% 30%,rgba(255,255,255,.12) 0%,transparent 100%),
+  radial-gradient(circle 120px at 78% 70%,rgba(255,255,255,.08) 0%,transparent 100%),
+  radial-gradient(circle 50px at 65% 25%,rgba(255,255,255,.1) 0%,transparent 100%),
+  radial-gradient(circle 35px at 30% 75%,rgba(255,255,255,.07) 0%,transparent 100%),
+  radial-gradient(circle 60px at 90% 40%,rgba(255,255,255,.06) 0%,transparent 100%);pointer-events:none;animation:heroFloat 8s ease-in-out infinite alternate}
+@keyframes heroFloat{0%{opacity:.8;transform:translateY(0)}100%{opacity:1;transform:translateY(-3px)}}
+[data-theme="dark"] .home-hero{background:#0c4a44}
+[data-theme="dark"] .home-hero::before{opacity:.7}
+.hero-pat{position:absolute;inset:0;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='400'%3E%3C!-- WATER DROPS --%3E%3Cpath d='M120 180c0 18-15 32-15 32s-15-14-15-32c0-20 15-45 15-45s15 25 15 45z' fill='white' opacity='.8'/%3E%3Cpath d='M870 110c0 14-11 24-11 24s-11-10-11-24c0-15 11-34 11-34s11 19 11 34z' fill='white' opacity='.6'/%3E%3Cpath d='M510 340c0 10-8 18-8 18s-8-8-8-18c0-12 8-26 8-26s8 14 8 26z' fill='white' opacity='.5'/%3E%3C!-- BAR CHARTS --%3E%3Cg opacity='.7'%3E%3Crect x='760' y='260' width='16' height='55' rx='3' fill='white'/%3E%3Crect x='782' y='280' width='16' height='35' rx='3' fill='white'/%3E%3Crect x='804' y='245' width='16' height='70' rx='3' fill='white'/%3E%3Crect x='826' y='270' width='16' height='45' rx='3' fill='white'/%3E%3Crect x='848' y='255' width='16' height='60' rx='3' fill='white'/%3E%3Cline x1='755' y1='315' x2='870' y2='315' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3C/g%3E%3Cg opacity='.45'%3E%3Crect x='60' y='300' width='12' height='40' rx='2' fill='white'/%3E%3Crect x='78' y='315' width='12' height='25' rx='2' fill='white'/%3E%3Crect x='96' y='295' width='12' height='45' rx='2' fill='white'/%3E%3Crect x='114' y='308' width='12' height='32' rx='2' fill='white'/%3E%3C/g%3E%3C!-- LEAVES --%3E%3Cg opacity='.7'%3E%3Cpath d='M900 55c-40-35-5-90 45-90-5 60-45 90-45 90z' fill='white'/%3E%3Cpath d='M900 55c12-22 28-52 45-90' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cpath d='M910 40c-5 5-15 10-20 15' fill='none' stroke='white' stroke-width='.8'/%3E%3C/g%3E%3Cg opacity='.5'%3E%3Cpath d='M200 60c-28-24-3-62 32-62-4 42-32 62-32 62z' fill='white'/%3E%3Cpath d='M200 60c8-16 20-36 32-62' fill='none' stroke='white' stroke-width='1'/%3E%3C/g%3E%3Cg opacity='.35'%3E%3Cpath d='M430 355c-20-18-2-48 24-48-3 32-24 48-24 48z' fill='white'/%3E%3Cpath d='M430 355c6-12 15-28 24-48' fill='none' stroke='white' stroke-width='.8'/%3E%3C/g%3E%3C!-- MOLECULES --%3E%3Cg opacity='.65'%3E%3Ccircle cx='330' cy='80' r='12' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='375' cy='55' r='8' fill='none' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='365' cy='115' r='9' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cline x1='340' y1='72' x2='368' y2='60' stroke='white' stroke-width='1.5'/%3E%3Cline x1='338' y1='90' x2='358' y2='108' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='330' cy='80' r='4' fill='white' opacity='.4'/%3E%3Ccircle cx='375' cy='55' r='3' fill='white' opacity='.3'/%3E%3Ccircle cx='365' cy='115' r='3' fill='white' opacity='.3'/%3E%3C/g%3E%3Cg opacity='.4'%3E%3Ccircle cx='680' cy='340' r='9' fill='none' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='715' cy='320' r='6' fill='none' stroke='white' stroke-width='1.2'/%3E%3Ccircle cx='710' cy='365' r='7' fill='none' stroke='white' stroke-width='1.2'/%3E%3Cline x1='688' y1='334' x2='710' y2='324' stroke='white' stroke-width='1.2'/%3E%3Cline x1='686' y1='348' x2='704' y2='360' stroke='white' stroke-width='1.2'/%3E%3C/g%3E%3C!-- DATA DOTS GRID --%3E%3Cg opacity='.5'%3E%3Ccircle cx='560' cy='60' r='4' fill='white'/%3E%3Ccircle cx='590' cy='60' r='4' fill='white'/%3E%3Ccircle cx='620' cy='60' r='4' fill='white'/%3E%3Ccircle cx='650' cy='60' r='4' fill='white'/%3E%3Ccircle cx='560' cy='88' r='4' fill='white'/%3E%3Ccircle cx='590' cy='88' r='4' fill='white'/%3E%3Ccircle cx='620' cy='88' r='4' fill='white'/%3E%3Ccircle cx='650' cy='88' r='4' fill='white'/%3E%3Ccircle cx='560' cy='116' r='4' fill='white'/%3E%3Ccircle cx='590' cy='116' r='4' fill='white'/%3E%3Ccircle cx='620' cy='116' r='4' fill='white'/%3E%3Ccircle cx='650' cy='116' r='4' fill='white'/%3E%3C/g%3E%3Cg opacity='.3'%3E%3Ccircle cx='150' cy='280' r='3' fill='white'/%3E%3Ccircle cx='172' cy='280' r='3' fill='white'/%3E%3Ccircle cx='194' cy='280' r='3' fill='white'/%3E%3Ccircle cx='150' cy='300' r='3' fill='white'/%3E%3Ccircle cx='172' cy='300' r='3' fill='white'/%3E%3Ccircle cx='194' cy='300' r='3' fill='white'/%3E%3C/g%3E%3C!-- CONNECTING LINES --%3E%3Cg opacity='.15'%3E%3Cpath d='M120 215 Q250 160 330 80' fill='none' stroke='white' stroke-width='1' stroke-dasharray='4 6'/%3E%3Cpath d='M650 88 Q720 150 760 260' fill='none' stroke='white' stroke-width='1' stroke-dasharray='4 6'/%3E%3Cpath d='M375 55 Q450 50 560 60' fill='none' stroke='white' stroke-width='.8' stroke-dasharray='3 5'/%3E%3C/g%3E%3C/svg%3E");background-size:cover;background-position:center}
+[data-theme="dark"] .hero-pat{opacity:.08}
+.home-hero h1{font-family:'Kanit',sans-serif;font-size:clamp(22px,3.2vw,32px);font-weight:800;color:#fff;margin-bottom:6px;position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.15)}
+.home-hero p{color:rgba(255,255,255,.75);font-size:14.5px;position:relative;z-index:1}
+.home-hero .h-date{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:6px 18px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.9);margin-top:16px;position:relative;z-index:1}
+.home-hero .h-date .blink{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.5);animation:pulse-dot 2s infinite}
 
 /* Alert Panel */
 .alert-panel{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
@@ -484,6 +499,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="pg-pad" id="home-content">
 
 <div class="home-hero">
+  <div class="hero-pat"></div>
   <h1>🏥 ระบบข้อมูลสุขภาพ</h1>
   <p>กลุ่มงานบริการด้านปฐมภูมิแบบองค์รวม โรงพยาบาลทับคล้อ อ.ทับคล้อ จ.พิจิตร</p>
   <div class="h-date"><span class="blink"></span> <span id="homeDate"></span></div>
