@@ -551,20 +551,52 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <!-- Timeline Chart -->
 <div class="stit"><span>📉 แนวโน้มข้ามปี — เปรียบเทียบตัวชี้วัดสำคัญ</span><span class="ln"></span></div>
 <div class="cgr">
+  <!-- Health indicators - compact stat comparison replacing oversized line chart -->
   <div class="timeline-card" style="grid-column:1/-1">
-    <h3>แนวโน้มตัวชี้วัดสุขภาพ 2567 vs 2568</h3>
-    <div class="tc-sub">เปรียบเทียบกลุ่มเดียวกัน 119 คน</div>
-    <div class="cw" style="height:250px"><canvas id="tlHealth"></canvas></div>
+    <h3>แนวโน้มตัวชี้วัดสุขภาพ 2567 → 2568</h3>
+    <div class="tc-sub">เปรียบเทียบกลุ่มเดียวกัน 119 คน | ค่าที่ลดลง = แนวโน้มดีขึ้น ✅</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px">
+      <!-- Total As -->
+      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(239,68,68,.02));border:1px solid rgba(239,68,68,.1);text-align:center">
+        <div style="font-size:13.5px;font-weight:600;color:#ef4444;margin-bottom:10px">Total As เกินอ้างอิง</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">11</div><div style="font-size:12px;color:var(--t3)">คน (67)</div></div>
+          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
+          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">4</div><div style="font-size:12px;color:var(--t3)">คน (68)</div></div>
+        </div>
+        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −63.6%</div>
+      </div>
+      <!-- Inorganic As -->
+      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(245,158,11,.02));border:1px solid rgba(245,158,11,.1);text-align:center">
+        <div style="font-size:13.5px;font-weight:600;color:#d97706;margin-bottom:10px">Inorganic As เกิน</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">7</div><div style="font-size:12px;color:var(--t3)">คน (67)</div></div>
+          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
+          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">3</div><div style="font-size:12px;color:var(--t3)">คน (68)</div></div>
+        </div>
+        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −57.1%</div>
+      </div>
+      <!-- SCN -->
+      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(124,58,237,.02));border:1px solid rgba(124,58,237,.1);text-align:center">
+        <div style="font-size:13.5px;font-weight:600;color:#7c3aed;margin-bottom:10px">SCN เกิน (ไม่สูบบุหรี่)</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">69.9%</div><div style="font-size:12px;color:var(--t3)">ปี 67</div></div>
+          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
+          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">35.8%</div><div style="font-size:12px;color:var(--t3)">ปี 68</div></div>
+        </div>
+        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −34.1%</div>
+      </div>
+    </div>
   </div>
   <div class="timeline-card">
     <h3>อัตราผ่านเกณฑ์น้ำประปา</h3>
     <div class="tc-sub">4 รอบตรวจ (ปี 67-68)</div>
-    <div class="cw" style="height:240px"><canvas id="tlWater"></canvas></div>
+    <div class="cw" style="height:220px"><canvas id="tlWater"></canvas></div>
   </div>
   <div class="timeline-card">
     <h3>คุณภาพน้ำเสีย — Coliform</h3>
     <div class="tc-sub">4 ไตรมาส (Q3/67 — Q1/69)</div>
-    <div class="cw" style="height:240px"><canvas id="tlWaste"></canvas></div>
+    <div class="cw" style="height:220px"><canvas id="tlWaste"></canvas></div>
   </div>
 </div>
 
@@ -1429,24 +1461,7 @@ function renderHomeCharts(){
   if(rHome)return;rHome=true;
   const cc=getChartColors();
 
-  // 1. Health Timeline - multi-line
-  safeChart('tlHealth',{
-    type:'line',
-    data:{
-      labels:['ปี 2567','ปี 2568'],
-      datasets:[
-        {label:'Total As เกิน (คน)',data:[11,4],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.08)',fill:true,tension:.3,pointRadius:6,pointHoverRadius:9,borderWidth:3},
-        {label:'Inorganic As เกิน (คน)',data:[7,3],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.08)',fill:true,tension:.3,pointRadius:6,pointHoverRadius:9,borderWidth:3},
-        {label:'SCN เกิน % (ไม่สูบ)',data:[69.9,35.8],borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,.06)',fill:true,tension:.3,pointRadius:6,pointHoverRadius:9,borderWidth:3,yAxisID:'y1'}
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:11.5},usePointStyle:true,pointStyle:'circle',padding:16}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+(x.datasetIndex===2?'%':' คน')}}},
-      scales:{y:{beginAtZero:true,max:14,grid:{color:cc.g},ticks:{color:'#94a3b8',callback:v=>v+' คน'},title:{display:true,text:'จำนวน (คน)',font:{size:11},color:'#94a3b8'}},
-      y1:{position:'right',beginAtZero:true,max:80,grid:{drawOnChartArea:false},ticks:{color:'#94a3b8',callback:v=>v+'%'},title:{display:true,text:'ร้อยละ (%)',font:{size:11},color:'#94a3b8'}},
-      x:{grid:{display:false},ticks:{color:cc.t,font:{size:13,weight:'bold'}}}},
-      animation:{duration:1000,easing:'easeOutQuart'}
-    }
-  });
+  // 1. Health indicators now shown as HTML stat cards (no chart needed)
 
   // 2. Water pass rate timeline
   safeChart('tlWater',{
