@@ -1038,33 +1038,70 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
   </div>
 </div>
 
-<!-- ══ KPI CARDS ══ -->
-<div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
-  <div class="kpig" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
-    <div class="kpi kgr"><div class="kpi-top"><div class="kpi-ic">📅</div></div><div class="kpi-lb">ปีงบ 67 Q3</div><div class="kpi-vl" style="font-size:22px;color:var(--success)">ผ่าน</div><div class="kpi-sb">8/8 ตัวที่ตรวจผ่าน<br><small style="color:var(--t3)">Cl & TSS ไม่ได้ตรวจ</small></div></div>
-    <div class="kpi kgr"><div class="kpi-top"><div class="kpi-ic">📅</div></div><div class="kpi-lb">ปีงบ 68 Q2</div><div class="kpi-vl" style="font-size:22px;color:var(--success)">ผ่านหมด</div><div class="kpi-sb">10/10 พารามิเตอร์ผ่าน</div></div>
-    <div class="kpi kgr"><div class="kpi-top"><div class="kpi-ic">📅</div></div><div class="kpi-lb">ปีงบ 68 Q3</div><div class="kpi-vl" style="font-size:22px;color:var(--success)">ผ่าน</div><div class="kpi-sb">10/10 ผ่าน<br><small style="color:var(--warning)">⚠️ งบจำกัด lab ปิดปรับปรุง</small></div></div>
-    <div class="kpi kr"><div class="kpi-top"><div class="kpi-ic">📅</div></div><div class="kpi-lb">ปีงบ 69 Q1</div><div class="kpi-vl" style="font-size:22px;color:var(--danger)">ไม่ผ่าน</div><div class="kpi-sb">3/10 พารามิเตอร์ไม่ผ่าน</div></div>
+<!-- ══ KPI summary ══ -->
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+  <div style="flex:1;min-width:120px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);text-align:center">
+    <div style="font-size:11px;color:var(--t3)">พารามิเตอร์หลัก</div>
+    <div style="font-size:26px;font-weight:800;color:var(--primary);font-family:'Kanit'">10</div>
+    <div style="font-size:10.5px;color:var(--t3)">+ เสริม 4 รายการ/ปี</div>
   </div>
-  <div class="kpig" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
-    <div class="kpi kt"><div class="kpi-top"><div class="kpi-ic">🔬</div></div><div class="kpi-lb">พารามิเตอร์หลัก</div><div class="kpi-vl" data-count="10">0</div><div class="kpi-sb">+ ตรวจเสริมปีละครั้ง 4 รายการ</div></div>
-    <div class="kpi ka"><div class="kpi-top"><div class="kpi-ic">📊</div></div><div class="kpi-lb">แนวโน้ม</div><div class="kpi-vl" style="font-size:18px;color:var(--danger)">⚠️ เริ่มไม่ผ่าน</div><div class="kpi-sb">ผ่าน 3 ไตรมาส → Q1/69 ไม่ผ่าน</div></div>
+  <div style="flex:1;min-width:120px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);text-align:center">
+    <div style="font-size:11px;color:var(--t3)">ผ่านเกณฑ์</div>
+    <div style="font-size:26px;font-weight:800;color:#16a34a;font-family:'Kanit'">3/4</div>
+    <div style="font-size:10.5px;color:var(--t3)">ไตรมาส</div>
+  </div>
+  <div style="flex:1;min-width:120px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);text-align:center">
+    <div style="font-size:11px;color:var(--t3)">ล่าสุด Q1/69</div>
+    <div style="font-size:22px;font-weight:800;color:#ef4444;font-family:'Kanit'">ไม่ผ่าน</div>
+    <div style="font-size:10.5px;color:var(--t3)">ระบบฆ่าเชื้อขัดข้อง</div>
   </div>
 </div>
 
-<!-- ══ 1. PASS/FAIL TIMELINE ══ -->
-<div class="stit"><span>📊 แนวโน้มผ่าน/ไม่ผ่านเกณฑ์ รายไตรมาส</span><span class="ln"></span></div>
+<!-- ══ 1. PASS/FAIL TIMELINE — compact stat cards ══ -->
+<div class="stit"><span>📊 ผลตรวจรายไตรมาส</span><span class="ln"></span></div>
 <div class="cgr">
-  <div class="cc fl"><h3>จำนวนพารามิเตอร์ผ่าน/ไม่ผ่าน (หลังบำบัด)</h3><div class="cs">เกณฑ์ประกาศกระทรวงฯ น้ำทิ้งอาคาร ประเภท ก. — 10 พารามิเตอร์หลัก</div><div class="cw" style="height:250px"><canvas id="wsTimeline"></canvas></div><div class="db dr"><strong>📌 สรุป:</strong> Q3/67 ผ่านทุกตัวที่ตรวจ (8/8 ไม่ได้ตรวจ Cl, TSS) → Q2/68 ผ่านครบ 10/10 → Q3/68 ผ่านครบ 10/10 (แม้งบจำกัด) → <strong>Q1/69 ไม่ผ่าน 3 ตัว</strong> (คลอรีน 3.1, Coliform 9,200, Fecal 9,200) — ระบบฆ่าเชื้อมีปัญหา</div></div>
-  <div class="cc"><h3>อัตราผ่านเกณฑ์ (%) รายไตรมาส</h3><div class="cs">เฉพาะค่าหลังบำบัด — คิดจากรายการที่ตรวจ</div><div class="cw" style="height:250px"><canvas id="wsPassRate"></canvas></div><div class="db di"><strong>📌 สรุป:</strong> ผ่าน 100% ต่อเนื่อง 3 ไตรมาส (Q3/67–Q3/68) จนกระทั่ง <strong>Q1/69 ลดลงเหลือ 70%</strong> — แนวโน้มเป็นปัญหาเฉียบพลันไม่ใช่ค่อยๆ แย่ลง แสดงว่าระบบฆ่าเชื้อเกิดขัดข้องในไตรมาสนี้</div></div>
+  <div class="cc fl">
+    <h3>สรุปผ่าน/ไม่ผ่าน — รายไตรมาส</h3>
+    <div class="cs">10 พารามิเตอร์หลัก | เกณฑ์ประกาศกระทรวงฯ อาคาร ประเภท ก.</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px">
+      <div style="border-radius:12px;padding:14px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.12);text-align:center">
+        <div style="font-size:12px;font-weight:600;color:var(--t3)">Q3/67</div>
+        <div style="font-size:26px;font-weight:800;color:#16a34a;font-family:'Kanit';margin:4px 0">✅</div>
+        <div style="font-size:13px;font-weight:700;color:#16a34a">8/8 ผ่าน</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px">Cl,TSS ไม่ได้ตรวจ</div>
+      </div>
+      <div style="border-radius:12px;padding:14px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.12);text-align:center">
+        <div style="font-size:12px;font-weight:600;color:var(--t3)">Q2/68</div>
+        <div style="font-size:26px;font-weight:800;color:#16a34a;font-family:'Kanit';margin:4px 0">✅</div>
+        <div style="font-size:13px;font-weight:700;color:#16a34a">10/10 ผ่าน</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px">ผ่านครบทุกตัว</div>
+      </div>
+      <div style="border-radius:12px;padding:14px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.12);text-align:center">
+        <div style="font-size:12px;font-weight:600;color:var(--t3)">Q3/68</div>
+        <div style="font-size:26px;font-weight:800;color:#16a34a;font-family:'Kanit';margin:4px 0">✅</div>
+        <div style="font-size:13px;font-weight:700;color:#16a34a">10/10 ผ่าน</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px">⚠ งบจำกัด</div>
+      </div>
+      <div style="border-radius:12px;padding:14px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);text-align:center">
+        <div style="font-size:12px;font-weight:600;color:var(--t3)">Q1/69</div>
+        <div style="font-size:26px;font-weight:800;color:#ef4444;font-family:'Kanit';margin:4px 0">❌</div>
+        <div style="font-size:13px;font-weight:700;color:#ef4444">3 ตัวไม่ผ่าน</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px">Cl, Coliform, Fecal</div>
+      </div>
+    </div>
+    <div class="db dr" style="margin-top:10px"><strong>📌</strong> ผ่าน 100% ต่อเนื่อง 3 ไตรมาส → <strong>Q1/69 ระบบฆ่าเชื้อขัดข้อง</strong> ทำให้คลอรีน+จุลินทรีย์เกินเกณฑ์พร้อมกัน</div>
+  </div>
 </div>
 
-<!-- ══ 2. BOD/TSS/TKN TREND ══ -->
-<div class="stit"><span>📈 แนวโน้ม BOD, TSS, TKN (ก่อน vs หลังบำบัด)</span><span class="ln"></span></div>
+<!-- ══ 2. BOD/TSS/TKN — รวมกราฟเดียว ══ -->
+<div class="stit"><span>📈 แนวโน้ม BOD · TSS · TKN (หลังบำบัด)</span><span class="ln"></span></div>
 <div class="cgr">
-  <div class="cc fl"><h3>BOD — ค่าบีโอดี</h3><div class="cs">มาตรฐาน ≤ 20 mg/L (หลังบำบัด)</div><div class="cw" style="height:260px"><canvas id="wsBOD"></canvas></div><div class="db dg"><strong>📌 สรุป:</strong> BOD หลังบำบัด<strong>ผ่านเกณฑ์ทุกไตรมาส</strong> — Q3/67: 5, Q2/68: 5, Q3/68: 6.2, Q1/69: 14.1 mg/L (เกณฑ์ ≤20) ค่าก่อนบำบัดสูงขึ้นเรื่อยๆ (51→69→102) แต่ระบบยังกำจัดได้ดี ประสิทธิภาพ 86-93%</div></div>
-  <div class="cc"><h3>TSS — สารแขวนลอย</h3><div class="cs">มาตรฐาน ≤ 30 mg/L (หลังบำบัด) | Q3/67 ไม่ได้ตรวจ</div><div class="cw" style="height:260px"><canvas id="wsTSS"></canvas></div><div class="db dg"><strong>📌 สรุป:</strong> TSS หลังบำบัด<strong>ผ่านเกณฑ์ทุกไตรมาสที่ตรวจ</strong> — Q2/68: 19, Q3/68: &lt;25, Q1/69: 25 mg/L (เกณฑ์ ≤30) ค่า Q1/69 ใกล้เกณฑ์ (25/30) ควรเฝ้าระวัง</div></div>
-  <div class="cc"><h3>TKN — ไนโตรเจนรวม</h3><div class="cs">มาตรฐาน ≤ 35 mg/L (หลังบำบัด)</div><div class="cw" style="height:260px"><canvas id="wsTKN"></canvas></div><div class="db dg"><strong>📌 สรุป:</strong> TKN หลังบำบัดผ่านทุกไตรมาส — Q3/67: 7.01, Q2/68: 6.65, Q3/68: 11.2, Q1/69: 16.2 mg/L ประสิทธิภาพกำจัด 83-91% <strong>เป็นพารามิเตอร์ที่ระบบบำบัดทำงานได้ดีที่สุด</strong></div></div>
+  <div class="cc fl">
+    <h3>ค่าหลังบำบัด — เทียบเกณฑ์มาตรฐาน</h3>
+    <div class="cs">แท่งสี = ค่าหลังบำบัด | เส้นประ = เกณฑ์มาตรฐาน | ยิ่งต่ำกว่าเส้นประยิ่งดี</div>
+    <div class="cw" style="height:240px"><canvas id="wsCombined"></canvas></div>
+    <div class="db dg"><strong>📌</strong> BOD, TSS, TKN หลังบำบัด <strong>ผ่านเกณฑ์ทุกไตรมาส</strong> แต่มีแนวโน้มสูงขึ้นเรื่อยๆ — ควรเฝ้าระวัง</div>
+  </div>
 </div>
 
 <!-- ══ 3. HEAT TABLE ══ -->
@@ -1092,26 +1129,54 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <!-- ══ 4. TREATMENT EFFICIENCY ══ -->
 <div class="stit"><span>📉 ประสิทธิภาพระบบบำบัด</span><span class="ln"></span></div>
 <div class="cgr">
-  <div class="cc fl"><h3>ค่าก่อนบำบัด vs หลังบำบัด (mg/L) — ล่าสุด Q1/69</h3><div class="cs">แท่งแดง = ก่อนบำบัด (ค่าสูง) | แท่งเขียว = หลังบำบัด (ค่าต่ำ = ดี) | เส้นประ = เกณฑ์มาตรฐาน</div><div class="cw" style="height:260px"><canvas id="wsBeforeAfter"></canvas></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-    <div style="flex:1;min-width:100px;padding:10px 14px;border-radius:10px;background:rgba(22,163,74,.08);text-align:center">
-      <div style="font-size:11px;color:var(--t3)">BOD กำจัดได้</div>
-      <div style="font-size:20px;font-weight:800;color:#16a34a;font-family:'Kanit'">86.2%</div>
-      <div style="font-size:10px;color:var(--t3)">102→14.1 mg/L</div>
+  <div class="cc fl"><h3>ค่าก่อนบำบัด vs หลังบำบัด (mg/L) — ล่าสุด Q1/69</h3><div class="cs">แท่งแดง = ก่อนบำบัด | แท่งเขียว = หลังบำบัด | เส้นประ = เกณฑ์มาตรฐาน</div><div class="cw" style="height:240px"><canvas id="wsBeforeAfter"></canvas></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+    <div style="flex:1;min-width:110px;padding:12px 16px;border-radius:12px;background:rgba(22,163,74,.07);text-align:center">
+      <div style="font-size:13px;font-weight:600;color:var(--t3)">BOD กำจัดได้</div>
+      <div style="font-size:24px;font-weight:800;color:#16a34a;font-family:'Kanit'">86.2%</div>
+      <div style="font-size:12px;color:var(--t3)">102 → 14.1 mg/L</div>
     </div>
-    <div style="flex:1;min-width:100px;padding:10px 14px;border-radius:10px;background:rgba(2,132,199,.08);text-align:center">
-      <div style="font-size:11px;color:var(--t3)">TSS กำจัดได้</div>
-      <div style="font-size:20px;font-weight:800;color:#0284c7;font-family:'Kanit'">62.7%</div>
-      <div style="font-size:10px;color:var(--t3)">67→25 mg/L</div>
+    <div style="flex:1;min-width:110px;padding:12px 16px;border-radius:12px;background:rgba(2,132,199,.07);text-align:center">
+      <div style="font-size:13px;font-weight:600;color:var(--t3)">TSS กำจัดได้</div>
+      <div style="font-size:24px;font-weight:800;color:#0284c7;font-family:'Kanit'">62.7%</div>
+      <div style="font-size:12px;color:var(--t3)">67 → 25 mg/L</div>
     </div>
-    <div style="flex:1;min-width:100px;padding:10px 14px;border-radius:10px;background:rgba(124,58,237,.08);text-align:center">
-      <div style="font-size:11px;color:var(--t3)">TKN กำจัดได้</div>
-      <div style="font-size:20px;font-weight:800;color:#7c3aed;font-family:'Kanit'">83.0%</div>
-      <div style="font-size:10px;color:var(--t3)">95.1→16.2 mg/L</div>
+    <div style="flex:1;min-width:110px;padding:12px 16px;border-radius:12px;background:rgba(124,58,237,.07);text-align:center">
+      <div style="font-size:13px;font-weight:600;color:var(--t3)">TKN กำจัดได้</div>
+      <div style="font-size:24px;font-weight:800;color:#7c3aed;font-family:'Kanit'">83.0%</div>
+      <div style="font-size:12px;color:var(--t3)">95.1 → 16.2 mg/L</div>
     </div>
   </div>
-  <div class="db dg"><strong>📌 สรุป:</strong> ระบบบำบัดกำจัดสารได้ดี — BOD 86%, TKN 83%, TSS 63% | <strong>ปัญหาหลักไม่ใช่ประสิทธิภาพการบำบัด แต่เป็นระบบฆ่าเชื้อ</strong> (คลอรีน) ที่ทำงานผิดปกติใน Q1/69</div></div>
-  <div class="cc"><h3>Coliform & Fecal Coliform (หลังบำบัด)</h3><div class="cs">เกณฑ์: Coliform ≤5,000 | Fecal ≤1,000 MPN/100mL</div><div class="cw" style="height:260px"><canvas id="wsBacteria"></canvas></div><div class="db dr"><strong>📌 สรุป:</strong> Q3/67 ถึง Q3/68 เชื้อหลังบำบัดอยู่ในเกณฑ์ดี (11→23→490 MPN) แต่ <strong>Q1/69 พุ่งขึ้น 9,200 MPN</strong> ทั้ง Coliform และ Fecal เกินเกณฑ์ — สะท้อนปัญหาระบบฆ่าเชื้อ/คลอรีนโดยเฉพาะ</div></div>
+  <div class="db dg"><strong>📌</strong> ระบบบำบัดกำจัดสารได้ดี — <strong>ปัญหาหลักคือระบบฆ่าเชื้อ</strong> (คลอรีน) ที่ขัดข้องใน Q1/69</div></div>
+
+  <!-- Bacteria — compact stat cards instead of log chart -->
+  <div class="cc">
+    <h3>Coliform & Fecal Coliform (หลังบำบัด)</h3>
+    <div class="cs">เกณฑ์: Coliform ≤5,000 | Fecal ≤1,000 MPN/100mL</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px">
+      <div style="border-radius:10px;padding:12px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.1);text-align:center">
+        <div style="font-size:11px;color:var(--t3);font-weight:600">Q3/67</div>
+        <div style="font-size:20px;font-weight:800;color:#16a34a;font-family:'Kanit'">11</div>
+        <div style="font-size:10.5px;color:var(--t3)">MPN ✅</div>
+      </div>
+      <div style="border-radius:10px;padding:12px;background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.1);text-align:center">
+        <div style="font-size:11px;color:var(--t3);font-weight:600">Q2/68</div>
+        <div style="font-size:20px;font-weight:800;color:#16a34a;font-family:'Kanit'">23</div>
+        <div style="font-size:10.5px;color:var(--t3)">MPN ✅</div>
+      </div>
+      <div style="border-radius:10px;padding:12px;background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.15);text-align:center">
+        <div style="font-size:11px;color:var(--t3);font-weight:600">Q3/68</div>
+        <div style="font-size:20px;font-weight:800;color:#d97706;font-family:'Kanit'">490</div>
+        <div style="font-size:10.5px;color:var(--t3)">MPN ✅ ใกล้เกณฑ์</div>
+      </div>
+      <div style="border-radius:10px;padding:12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);text-align:center">
+        <div style="font-size:11px;color:var(--t3);font-weight:600">Q1/69</div>
+        <div style="font-size:20px;font-weight:800;color:#ef4444;font-family:'Kanit'">9,200</div>
+        <div style="font-size:10.5px;color:#ef4444;font-weight:600">❌ เกิน 9.2×</div>
+      </div>
+    </div>
+    <div class="db dr" style="margin-top:10px"><strong>📌</strong> Q3/67–Q3/68 อยู่ในเกณฑ์ดี → <strong>Q1/69 พุ่ง 9,200 MPN</strong> เกินทั้ง Coliform และ Fecal — ระบบฆ่าเชื้อขัดข้อง</div>
+  </div>
 </div>
 
   <div class="credit">ข้อมูล: ศูนย์อนามัยที่ 3 กรมอนามัย | ปีงบประมาณ 2567-2569 | เกณฑ์ประกาศกระทรวงฯ น้ำทิ้งอาคาร ประเภท ก.</div>
@@ -1656,20 +1721,19 @@ function renderWaste(){if(rWs)return;rWs=true;
 const cc=getChartColors();
 const Q=['Q3/67','Q2/68','Q3/68','Q1/69'];
 
-// 1. Pass/Fail Timeline (stacked bar) — CORRECTED: Q3/67 passed all tested (8/8, 2 not tested)
-safeChart('wsTimeline',{type:'bar',data:{labels:Q,datasets:[{label:'ผ่านเกณฑ์',data:[8,10,10,7],backgroundColor:P.gn,borderRadius:6,borderSkipped:false},{label:'ไม่ผ่านเกณฑ์',data:[0,0,0,3],backgroundColor:P.rd,borderRadius:6,borderSkipped:false},{label:'ไม่ได้ตรวจ',data:[2,0,0,0],backgroundColor:'rgba(148,163,184,.3)',borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+' ตัว'}}},scales:{y:{stacked:true,beginAtZero:true,max:12,grid:{color:cc.g},ticks:{callback:v=>v+' ตัว',color:'#94a3b8'}},x:{stacked:true,grid:{display:false},ticks:{color:cc.t}}}}});
+// 1. Pass/fail now shown as HTML stat cards (no chart needed)
 
-// 2. Pass Rate line — CORRECTED: Q3/67 = 100% (passed all tested)
-safeChart('wsPassRate',{type:'line',data:{labels:Q,datasets:[{label:'% ผ่านเกณฑ์',data:[100,100,100,70],borderColor:'hsl(var(--hue),70%,50%)',backgroundColor:'hsla(var(--hue),70%,50%,.1)',fill:true,tension:.3,pointRadius:6,pointBackgroundColor:['#16a34a','#16a34a','#16a34a','#ef4444'],pointBorderColor:'#fff',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+'%'}}},scales:{y:{min:0,max:110,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
-
-// 3. BOD trend — CORRECTED: Q3/67 after = 5 (NOT 471)
-safeChart('wsBOD',{type:'bar',data:{labels:Q,datasets:[{label:'ก่อนบำบัด',data:[51,69,null,102],backgroundColor:'rgba(239,68,68,.6)',borderRadius:6,borderSkipped:false},{label:'หลังบำบัด',data:[5,5,6.2,14.1],backgroundColor:'rgba(22,163,74,.6)',borderRadius:6,borderSkipped:false},{label:'เกณฑ์ (≤20)',data:[20,20,20,20],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;return v!=null?x.dataset.label+': '+v+' mg/L':''}}}},scales:{y:{beginAtZero:true,max:120,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'},title:{display:true,text:'mg/L',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
-
-// 4. TSS trend — CORRECTED: Q3/67 not tested (null)
-safeChart('wsTSS',{type:'bar',data:{labels:Q,datasets:[{label:'ก่อนบำบัด',data:[null,55,null,67],backgroundColor:'rgba(239,68,68,.6)',borderRadius:6,borderSkipped:false},{label:'หลังบำบัด',data:[null,19,null,25],backgroundColor:'rgba(22,163,74,.6)',borderRadius:6,borderSkipped:false},{label:'เกณฑ์ (≤30)',data:[30,30,30,30],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;return v!=null?x.dataset.label+': '+v+' mg/L':'ไม่ได้ตรวจ'}}}},scales:{y:{beginAtZero:true,max:80,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'},title:{display:true,text:'mg/L',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
-
-// 5. TKN trend (unchanged)
-safeChart('wsTKN',{type:'bar',data:{labels:Q,datasets:[{label:'ก่อนบำบัด',data:[50.9,73.73,null,95.1],backgroundColor:'rgba(239,68,68,.6)',borderRadius:6,borderSkipped:false},{label:'หลังบำบัด',data:[7.01,6.65,11.2,16.2],backgroundColor:'rgba(22,163,74,.6)',borderRadius:6,borderSkipped:false},{label:'เกณฑ์ (≤35)',data:[35,35,35,35],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;return v!=null?x.dataset.label+': '+v+' mg/L':''}}}},scales:{y:{beginAtZero:true,max:100,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'},title:{display:true,text:'mg/L',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+// 2. Combined BOD+TSS+TKN after-treatment trend
+safeChart('wsCombined',{type:'bar',data:{
+  labels:['Q3/67','Q2/68','Q3/68','Q1/69'],
+  datasets:[
+    {label:'BOD (≤20)',data:[5,5,6.2,14.1],backgroundColor:'rgba(2,132,199,.65)',borderRadius:5,borderSkipped:false},
+    {label:'TSS (≤30)',data:[null,19,null,25],backgroundColor:'rgba(124,58,237,.55)',borderRadius:5,borderSkipped:false},
+    {label:'TKN (≤35)',data:[7.01,6.65,11.2,16.2],backgroundColor:'rgba(22,163,74,.6)',borderRadius:5,borderSkipped:false},
+    {label:'เกณฑ์ BOD ≤20',data:[20,20,20,20],type:'line',borderColor:'rgba(2,132,199,.4)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'เกณฑ์ TSS ≤30',data:[30,30,30,30],type:'line',borderColor:'rgba(124,58,237,.35)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'เกณฑ์ TKN ≤35',data:[35,35,35,35],type:'line',borderColor:'rgba(22,163,74,.35)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11.5},usePointStyle:true,pointStyle:'circle',padding:12,filter:item=>item.datasetIndex<3}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;if(v==null)return'ไม่ได้ตรวจ';return x.dataset.label+': '+v+' mg/L'}}}},scales:{y:{beginAtZero:true,max:40,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8',font:{size:12}},title:{display:true,text:'mg/L',font:{size:12},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:12.5,weight:'bold'}}}}}});
 
 // 6. Heat Table — CORRECTED
 const htEl=document.getElementById('wsHeatTable');
@@ -1737,7 +1801,7 @@ safeChart('wsBeforeAfter',{type:'bar',data:{
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},usePointStyle:true,pointStyle:'circle',padding:14}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;if(v==null)return'';return x.dataset.label+': '+v+(x.datasetIndex<2?' mg/L':'')}}}},scales:{y:{beginAtZero:true,max:110,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'},title:{display:true,text:'mg/L',font:{size:11},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:11}}}}}});
 
 // 8. Bacteria chart
-safeChart('wsBacteria',{type:'bar',data:{labels:Q,datasets:[{label:'Coliform (หลังบำบัด)',data:[11,23,490,9200],backgroundColor:['rgba(22,163,74,.6)','rgba(22,163,74,.6)','rgba(250,204,21,.6)','rgba(239,68,68,.6)'],borderRadius:6,borderSkipped:false},{label:'Fecal Coliform (หลังบำบัด)',data:[6.8,2,490,9200],backgroundColor:['rgba(34,197,94,.4)','rgba(34,197,94,.4)','rgba(253,224,71,.4)','rgba(248,113,113,.4)'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10.5}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y.toLocaleString()+' MPN/100mL'}}},scales:{y:{type:'logarithmic',grid:{color:cc.g},ticks:{color:'#94a3b8',callback:function(v){if([1,10,100,1000,5000,10000].includes(v))return v.toLocaleString();return''}}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+// Bacteria data now shown as HTML stat cards (no chart needed)
 
 setTimeout(()=>runCountUp(document.getElementById('waste-content')),100);
 }
