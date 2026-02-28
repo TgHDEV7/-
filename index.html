@@ -44,112 +44,131 @@ html{scroll-behavior:smooth}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.7;display:flex;transition:background .4s,color .4s;font-size:15px}
 
 /* ═══ SIDEBAR ═══ */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:linear-gradient(180deg,hsl(var(--hue),55%,16%) 0%,hsl(var(--hue),45%,10%) 35%,#060a14 100%);color:#fff;z-index:100;display:flex;flex-direction:column;transition:transform .3s,background .5s;overflow-y:auto}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:linear-gradient(175deg,hsl(var(--hue),40%,14%) 0%,hsl(var(--hue),35%,9%) 40%,#050810 100%);color:#fff;z-index:100;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1),background .5s;overflow-y:auto;overflow-x:hidden}
 .sidebar::-webkit-scrollbar{width:3px}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:4px}
-.sidebar::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='300' height='900' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='70%25' cy='5%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0.05'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='30%25' cy='85%25' r='40%25'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0.02'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='300' height='900'/%3E%3Crect fill='url(%23g2)' width='300' height='900'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Ambient light overlay */
+.sidebar::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 40% at 50% 0%,hsla(var(--hue),50%,40%,.07) 0%,transparent 100%),
+  radial-gradient(ellipse 60% 30% at 20% 100%,hsla(var(--hue),40%,30%,.04) 0%,transparent 100%);
+  pointer-events:none;z-index:0}
+/* Subtle noise texture */
+.sidebar::after{content:'';position:absolute;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
 .sidebar>*{position:relative;z-index:1}
 
-/* Brand */
-.side-brand{padding:34px 22px 28px;border-bottom:none;position:relative}
-.side-brand::after{content:'';position:absolute;bottom:0;left:22px;right:22px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
-.side-brand .brand-top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;position:relative;cursor:pointer;transition:opacity .2s}
-.side-brand .brand-top:hover{opacity:.85}
-.side-brand .brand-top:active .logo-img{transform:scale(.96)}
-/* Ambient glow behind logo */
-.side-brand .brand-top::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,hsla(var(--hue),70%,50%,.12) 0%,transparent 70%);pointer-events:none;animation:ambientPulse 4s ease-in-out infinite;z-index:0}
-@keyframes ambientPulse{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
-/* Logo — multi-layer glass */
-.side-brand .logo-img{position:relative;z-index:1;width:74px;height:74px;border-radius:22px;background:linear-gradient(145deg,hsla(var(--hue),60%,42%,.5),hsla(var(--hue),50%,25%,.3));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0;box-shadow:0 12px 40px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.1);margin-bottom:18px;transition:all .5s cubic-bezier(.25,.46,.45,.94)}
-.side-brand .logo-img:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.06),0 0 30px hsla(var(--hue),70%,50%,.08),inset 0 1px 0 rgba(255,255,255,.15),inset 0 -1px 0 rgba(0,0,0,.1)}
-/* Glass shine top half */
-.side-brand .logo-img::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;border-radius:22px 22px 0 0;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);pointer-events:none}
-/* Subtle outer ring */
-.side-brand .logo-img::after{content:'';position:absolute;inset:-5px;border-radius:27px;border:1px solid hsla(var(--hue),60%,50%,.06);pointer-events:none}
+/* ═══ BRAND ═══ */
+@keyframes brandFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.side-brand{padding:28px 20px 22px;position:relative;animation:brandFadeIn .5s cubic-bezier(.25,.46,.45,.94) both}
+.side-brand::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
+.side-brand .brand-top{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;cursor:pointer;transition:opacity .2s}
+.side-brand .brand-top:hover{opacity:.9}
+.side-brand .brand-top:active .logo-img{transform:scale(.95)}
+/* Ambient glow */
+.side-brand .brand-top::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,hsla(var(--hue),60%,45%,.1) 0%,transparent 70%);pointer-events:none;animation:ambientPulse 6s ease-in-out infinite;z-index:0}
+@keyframes ambientPulse{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:.8;transform:translateX(-50%) scale(1.08)}}
+
+/* Logo — refined glass */
+.side-brand .logo-img{position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(145deg,hsla(var(--hue),50%,38%,.45),hsla(var(--hue),40%,20%,.25));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.08);margin-bottom:14px;transition:all .4s cubic-bezier(.25,.46,.45,.94)}
+.side-brand .logo-img svg{width:30px;height:34px}
+.side-brand .logo-img:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.35),0 0 24px hsla(var(--hue),60%,45%,.06),inset 0 1px 0 rgba(255,255,255,.12)}
+/* Glass shine */
+.side-brand .logo-img::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;border-radius:18px 18px 0 0;background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 100%);pointer-events:none}
+/* Outer ring */
+.side-brand .logo-img::after{content:'';position:absolute;inset:-4px;border-radius:22px;border:1px solid hsla(var(--hue),50%,45%,.05);pointer-events:none}
 /* Title */
 .side-brand .brand-text{position:relative;z-index:1}
-.side-brand .brand-text h2{font-family:'Kanit',sans-serif;font-size:19px;font-weight:700;line-height:1.3;letter-spacing:.2px;background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.side-brand .brand-text p{font-size:11.5px;color:rgba(255,255,255,.28);margin-top:5px;font-weight:500;letter-spacing:.6px}
-/* Status badge — frosted pill */
-.side-brand .brand-tag{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:5px 16px;border-radius:100px;background:hsla(var(--hue),60%,40%,.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid hsla(var(--hue),60%,50%,.1);font-size:9.5px;font-weight:700;color:hsl(var(--hue),55%,65%);letter-spacing:1.2px;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.04)}
-.side-brand .brand-tag .dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--hue),70%,55%);box-shadow:0 0 8px hsl(var(--hue),70%,50%),0 0 16px hsla(var(--hue),70%,50%,.3);animation:pulse-dot 2.5s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 8px hsl(var(--hue),70%,50%),0 0 16px hsla(var(--hue),70%,50%,.3)}50%{opacity:.5;box-shadow:0 0 4px hsl(var(--hue),70%,50%)}}
+.side-brand .brand-text h2{font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;line-height:1.3;letter-spacing:.3px;background:linear-gradient(180deg,rgba(255,255,255,.95) 20%,rgba(255,255,255,.55));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.side-brand .brand-text p{font-size:11px;color:rgba(255,255,255,.25);margin-top:3px;font-weight:500;letter-spacing:.8px}
+/* Status badge */
+.side-brand .brand-tag{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:4px 14px;border-radius:100px;background:hsla(var(--hue),50%,35%,.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid hsla(var(--hue),50%,45%,.08);font-size:9px;font-weight:700;color:hsl(var(--hue),45%,62%);letter-spacing:1.5px;text-transform:uppercase}
+.side-brand .brand-tag .dot{width:5px;height:5px;border-radius:50%;background:hsl(var(--hue),65%,52%);box-shadow:0 0 6px hsl(var(--hue),65%,48%);animation:pulse-dot 3s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 6px hsl(var(--hue),65%,48%)}50%{opacity:.4;box-shadow:0 0 3px hsl(var(--hue),65%,48%)}}
 
-/* Section */
-.side-sec{padding:24px 22px 12px;font-size:10px;font-weight:800;color:rgba(255,255,255,.2);letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-.side-sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent)}
+/* ═══ SECTION LABEL ═══ */
+.side-sec{padding:20px 20px 10px;font-size:9px;font-weight:700;color:rgba(255,255,255,.18);letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.side-sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.05),transparent)}
 
-/* Nav */
-.side-nav{padding:0 14px;flex:1}
-.nav-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:14px;font-size:14px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .3s cubic-bezier(.25,.46,.45,.94);margin-bottom:2px;position:relative;overflow:hidden;border:1px solid transparent}
-.nav-item:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.04);transform:translateX(3px)}
-.nav-item:hover .nav-ic{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08)}
-/* Hover accent bar — grows from center */
-.nav-item::before{content:'';position:absolute;left:0;top:50%;width:3px;height:0;border-radius:0 3px 3px 0;background:hsl(var(--hue),70%,55%);transition:all .3s cubic-bezier(.25,.46,.45,.94);transform:translateY(-50%);opacity:0}
-.nav-item:hover::before{height:50%;opacity:.5}
+/* ═══ NAV ENTRANCE ANIMATION ═══ */
+@keyframes navSlideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+.side-nav .nav-item,.side-nav .nav-sub{animation:navSlideIn .4s cubic-bezier(.25,.46,.45,.94) both}
+.side-nav .nav-item:nth-child(1){animation-delay:.05s}
+.side-nav .nav-item:nth-child(2),.side-nav .nav-sub:nth-child(3){animation-delay:.1s}
+.side-nav .nav-item:nth-child(4),.side-nav .nav-sub:nth-child(5){animation-delay:.15s}
+.side-nav .nav-item:nth-child(6){animation-delay:.2s}
+.side-nav .nav-item:nth-child(7){animation-delay:.25s}
+.side-nav .nav-item:nth-child(8){animation-delay:.3s}
+
+/* ═══ NAV ITEMS ═══ */
+.side-nav{padding:0 12px;flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:12px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);margin-bottom:2px;position:relative;overflow:hidden;border:1px solid transparent;letter-spacing:.2px}
+.nav-item:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.03);transform:translateX(2px)}
+.nav-item:hover .nav-ic{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.06)}
+/* Hover accent bar */
+.nav-item::before{content:'';position:absolute;left:0;top:50%;width:2.5px;height:0;border-radius:0 3px 3px 0;background:hsl(var(--hue),65%,55%);transition:all .25s cubic-bezier(.25,.46,.45,.94);transform:translateY(-50%);opacity:0}
+.nav-item:hover::before{height:40%;opacity:.4}
 
 /* Tooltip */
 .nav-item[data-tip]{position:relative}
-.nav-item[data-tip]::after{content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%) scale(.9);background:hsl(var(--hue),60%,25%);color:#fff;padding:6px 14px;border-radius:8px;font-size:11.5px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:999}
+.nav-item[data-tip]::after{content:attr(data-tip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%) scale(.92);background:hsl(var(--hue),50%,22%);color:rgba(255,255,255,.85);padding:5px 12px;border-radius:7px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:999}
 .nav-item[data-tip]:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
 
-/* ═══ GLASSMORPHISM ACTIVE STATE ═══ */
+/* ═══ ACTIVE STATE ═══ */
 .nav-item.active{
-  background:linear-gradient(135deg,hsla(var(--hue),70%,45%,.18),hsla(var(--hue),60%,50%,.06));
+  background:linear-gradient(135deg,hsla(var(--hue),60%,42%,.15),hsla(var(--hue),50%,45%,.05));
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  color:#fff;font-weight:600;
-  border:1px solid hsla(var(--hue),60%,60%,.15);
-  box-shadow:0 4px 20px hsla(var(--hue),70%,40%,.1),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(255,255,255,.02);
+  color:rgba(255,255,255,.95);font-weight:600;
+  border:1px solid hsla(var(--hue),55%,55%,.12);
+  box-shadow:0 2px 16px hsla(var(--hue),60%,35%,.08),inset 0 1px 0 rgba(255,255,255,.06);
   transform:translateX(0)
 }
-.nav-item.active::before{height:60%;opacity:1;width:3.5px;background:linear-gradient(180deg,hsl(var(--hue),70%,60%),hsl(var(--hue),80%,45%));box-shadow:0 0 10px hsla(var(--hue),80%,55%,.35),0 0 20px hsla(var(--hue),70%,50%,.15)}
+.nav-item.active::before{height:55%;opacity:1;width:3px;background:linear-gradient(180deg,hsl(var(--hue),65%,58%),hsl(var(--hue),70%,42%));box-shadow:0 0 8px hsla(var(--hue),70%,50%,.3)}
 
-/* Nav icon — glass pill */
-.nav-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s cubic-bezier(.25,.46,.45,.94);font-size:17px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
-.nav-ic svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:all .3s}
-.nav-item.active .nav-ic{background:hsla(var(--hue),60%,50%,.12);border-color:hsla(var(--hue),60%,50%,.15);box-shadow:0 0 12px hsla(var(--hue),60%,50%,.12)}
-.nav-item.active .nav-ic svg{stroke:hsl(var(--hue),65%,65%);filter:drop-shadow(0 0 4px hsla(var(--hue),70%,50%,.3))}
+/* ═══ NAV ICON ═══ */
+.nav-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s cubic-bezier(.25,.46,.45,.94);font-size:16px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04)}
+.nav-ic svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:all .25s}
+.nav-item.active .nav-ic{background:hsla(var(--hue),55%,48%,.1);border-color:hsla(var(--hue),55%,48%,.12);box-shadow:0 0 10px hsla(var(--hue),55%,48%,.08)}
+.nav-item.active .nav-ic svg{stroke:hsl(var(--hue),60%,62%);filter:drop-shadow(0 0 3px hsla(var(--hue),65%,50%,.25))}
 
-/* Sub-menu — tree line connector */
-.nav-sub{padding:0 14px 0 40px;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.25,.46,.45,.94);position:relative}
+/* ═══ SUB-MENU ═══ */
+.nav-sub{padding:0 12px 0 38px;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.25,.46,.45,.94);position:relative}
 .nav-sub.open{max-height:220px}
 /* Vertical tree line */
-.nav-sub::before{content:'';position:absolute;left:39px;top:0;bottom:12px;width:1.5px;background:linear-gradient(180deg,hsla(var(--hue),60%,50%,.2),rgba(255,255,255,.04));border-radius:1px}
-.nav-sub a{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:10px;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);margin-bottom:2px;position:relative;margin-left:24px}
-.nav-sub a:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);transform:translateX(2px)}
-.nav-sub a.active{color:#fff;font-weight:600;background:hsla(var(--hue),60%,50%,.08);border:1px solid hsla(var(--hue),60%,60%,.08)}
-/* Horizontal branch from tree line */
-.nav-sub a::before{content:'';position:absolute;left:-24px;top:50%;width:18px;height:1.5px;background:rgba(255,255,255,.08);border-radius:1px}
-.nav-sub a.active::before{background:hsla(var(--hue),60%,55%,.3)}
-/* Dot at branch end */
-.nav-sub a::after{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.06);transition:all .25s;flex-shrink:0}
-.nav-sub a.active::after{background:hsl(var(--hue),70%,55%);border-color:hsl(var(--hue),70%,55%);box-shadow:0 0 8px hsla(var(--hue),70%,55%,.4)}
-.nav-sub a:hover::after{background:rgba(255,255,255,.25)}
-.nav-arrow{margin-left:auto;font-size:10px;transition:transform .35s cubic-bezier(.25,.46,.45,.94);opacity:.3}
-.nav-item.expanded .nav-arrow{transform:rotate(180deg);opacity:.6}
+.nav-sub::before{content:'';position:absolute;left:37px;top:0;bottom:10px;width:1px;background:linear-gradient(180deg,hsla(var(--hue),50%,48%,.15),rgba(255,255,255,.03));border-radius:1px}
+.nav-sub a{display:flex;align-items:center;gap:10px;padding:8px 13px;border-radius:9px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;transition:all .2s cubic-bezier(.25,.46,.45,.94);margin-bottom:1px;position:relative;margin-left:22px;letter-spacing:.15px}
+.nav-sub a:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.8);transform:translateX(2px)}
+.nav-sub a.active{color:rgba(255,255,255,.92);font-weight:600;background:hsla(var(--hue),55%,48%,.07);border:1px solid hsla(var(--hue),55%,55%,.06)}
+/* Branch line */
+.nav-sub a::before{content:'';position:absolute;left:-22px;top:50%;width:16px;height:1px;background:rgba(255,255,255,.06);border-radius:1px}
+.nav-sub a.active::before{background:hsla(var(--hue),55%,52%,.25)}
+/* Dot */
+.nav-sub a::after{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.05);transition:all .2s;flex-shrink:0}
+.nav-sub a.active::after{background:hsl(var(--hue),65%,52%);border-color:hsl(var(--hue),65%,52%);box-shadow:0 0 6px hsla(var(--hue),65%,52%,.35)}
+.nav-sub a:hover::after{background:rgba(255,255,255,.2)}
+.nav-arrow{margin-left:auto;font-size:10px;transition:transform .3s cubic-bezier(.25,.46,.45,.94);opacity:.25}
+.nav-item.expanded .nav-arrow{transform:rotate(180deg);opacity:.5}
 
-/* Footer */
-.side-ft{padding:14px 22px;border-top:1px solid rgba(255,255,255,.04);font-size:10.5px;color:rgba(255,255,255,.18);line-height:1.6;letter-spacing:.2px}
+/* ═══ FOOTER ═══ */
+.side-ft{padding:12px 20px;border-top:1px solid rgba(255,255,255,.03);font-size:10px;color:rgba(255,255,255,.15);line-height:1.6;letter-spacing:.2px}
 
-/* Controls — glass panel */
-.side-ctrl{padding:14px 16px;display:flex;flex-direction:column;gap:10px;margin:0 12px 8px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* ═══ CONTROLS ═══ */
+.side-ctrl{padding:12px 14px;display:flex;flex-direction:column;gap:8px;margin:0 10px 6px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .ctrl-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.ctrl-label{font-size:11.5px;color:rgba(255,255,255,.4);font-weight:500;display:flex;align-items:center;gap:6px}
-.ctrl-label svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;opacity:.6}
-.toggle{position:relative;width:42px;height:23px;cursor:pointer}
+.ctrl-label{font-size:11px;color:rgba(255,255,255,.35);font-weight:500;display:flex;align-items:center;gap:6px}
+.ctrl-label svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.8;fill:none;opacity:.5}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer}
 .toggle input{display:none}
-.toggle span{position:absolute;inset:0;background:rgba(255,255,255,.08);border-radius:23px;transition:.3s;border:1px solid rgba(255,255,255,.06)}
-.toggle span::before{content:'';position:absolute;width:17px;height:17px;left:3px;top:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.toggle input:checked+span{background:linear-gradient(90deg,hsl(var(--hue),70%,40%),hsl(var(--hue),60%,50%));border-color:hsla(var(--hue),60%,50%,.3)}
-.toggle input:checked+span::before{transform:translateX(19px)}
-.color-dots{display:flex;gap:5px}
-.cdot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .25s}
-.cdot:hover{transform:scale(1.15);box-shadow:0 0 8px rgba(255,255,255,.1)}
-.cdot.act{border-color:rgba(255,255,255,.7);box-shadow:0 0 10px rgba(255,255,255,.2)}
+.toggle span{position:absolute;inset:0;background:rgba(255,255,255,.07);border-radius:22px;transition:.3s;border:1px solid rgba(255,255,255,.05)}
+.toggle span::before{content:'';position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked+span{background:linear-gradient(90deg,hsl(var(--hue),65%,38%),hsl(var(--hue),55%,48%));border-color:hsla(var(--hue),55%,48%,.25)}
+.toggle input:checked+span::before{transform:translateX(18px)}
+.color-dots{display:flex;gap:4px}
+.cdot{width:17px;height:17px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.cdot:hover{transform:scale(1.12);box-shadow:0 0 6px rgba(255,255,255,.08)}
+.cdot.act{border-color:rgba(255,255,255,.65);box-shadow:0 0 8px rgba(255,255,255,.15)}
 
 /* ═══ MAIN ═══ */
-.main{margin-left:300px;flex:1;min-height:100vh;position:relative}
-.main::before{content:'';position:fixed;top:0;left:300px;right:0;bottom:0;background:radial-gradient(ellipse at 20% 0%,hsla(var(--hue),40%,50%,.04),transparent 50%),radial-gradient(ellipse at 80% 100%,hsla(var(--hue),40%,50%,.03),transparent 50%);pointer-events:none;z-index:0;transition:background .4s}
+.main{margin-left:280px;flex:1;min-height:100vh;position:relative}
+.main::before{content:'';position:fixed;top:0;left:280px;right:0;bottom:0;background:radial-gradient(ellipse at 20% 0%,hsla(var(--hue),40%,50%,.04),transparent 50%),radial-gradient(ellipse at 80% 100%,hsla(var(--hue),40%,50%,.03),transparent 50%);pointer-events:none;z-index:0;transition:background .4s}
 
 /* Page transitions */
 .page{display:none;position:relative;z-index:1;opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease}
@@ -314,7 +333,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 .pg-pad{padding:26px 28px}
 
 /* ═══ HOME PAGE ═══ */
-.home-hero{border-radius:20px;overflow:hidden;position:relative;background:#0f766e;border:none;margin-bottom:22px;padding:56px 32px 48px;text-align:center}
+/* ═══ COMPACT HERO ═══ */
+.home-hero{border-radius:18px;overflow:hidden;position:relative;background:#0f766e;border:none;margin-bottom:18px;padding:38px 32px 32px;text-align:center}
 .home-hero::before{content:'';position:absolute;inset:0;background:
   radial-gradient(ellipse 60% 80% at 15% 80%,rgba(20,184,166,.6) 0%,transparent 60%),
   radial-gradient(ellipse 50% 70% at 85% 20%,rgba(59,130,246,.35) 0%,transparent 55%),
@@ -327,67 +347,89 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
   radial-gradient(circle 35px at 30% 75%,rgba(255,255,255,.07) 0%,transparent 100%),
   radial-gradient(circle 60px at 90% 40%,rgba(255,255,255,.06) 0%,transparent 100%);pointer-events:none;animation:heroFloat 8s ease-in-out infinite alternate}
 @keyframes heroFloat{0%{opacity:.8;transform:translateY(0)}100%{opacity:1;transform:translateY(-3px)}}
-[data-theme="dark"] .home-hero{background:#0c4a44}
+[data-theme="dark"] .home-hero{background:#0e5f58}
 [data-theme="dark"] .home-hero::before{opacity:.7}
-.hero-pat{position:absolute;inset:0;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='400'%3E%3C!-- WATER DROPS --%3E%3Cpath d='M120 180c0 18-15 32-15 32s-15-14-15-32c0-20 15-45 15-45s15 25 15 45z' fill='white' opacity='.8'/%3E%3Cpath d='M870 110c0 14-11 24-11 24s-11-10-11-24c0-15 11-34 11-34s11 19 11 34z' fill='white' opacity='.6'/%3E%3Cpath d='M510 340c0 10-8 18-8 18s-8-8-8-18c0-12 8-26 8-26s8 14 8 26z' fill='white' opacity='.5'/%3E%3C!-- BAR CHARTS --%3E%3Cg opacity='.7'%3E%3Crect x='760' y='260' width='16' height='55' rx='3' fill='white'/%3E%3Crect x='782' y='280' width='16' height='35' rx='3' fill='white'/%3E%3Crect x='804' y='245' width='16' height='70' rx='3' fill='white'/%3E%3Crect x='826' y='270' width='16' height='45' rx='3' fill='white'/%3E%3Crect x='848' y='255' width='16' height='60' rx='3' fill='white'/%3E%3Cline x1='755' y1='315' x2='870' y2='315' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3C/g%3E%3Cg opacity='.45'%3E%3Crect x='60' y='300' width='12' height='40' rx='2' fill='white'/%3E%3Crect x='78' y='315' width='12' height='25' rx='2' fill='white'/%3E%3Crect x='96' y='295' width='12' height='45' rx='2' fill='white'/%3E%3Crect x='114' y='308' width='12' height='32' rx='2' fill='white'/%3E%3C/g%3E%3C!-- LEAVES --%3E%3Cg opacity='.7'%3E%3Cpath d='M900 55c-40-35-5-90 45-90-5 60-45 90-45 90z' fill='white'/%3E%3Cpath d='M900 55c12-22 28-52 45-90' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cpath d='M910 40c-5 5-15 10-20 15' fill='none' stroke='white' stroke-width='.8'/%3E%3C/g%3E%3Cg opacity='.5'%3E%3Cpath d='M200 60c-28-24-3-62 32-62-4 42-32 62-32 62z' fill='white'/%3E%3Cpath d='M200 60c8-16 20-36 32-62' fill='none' stroke='white' stroke-width='1'/%3E%3C/g%3E%3Cg opacity='.35'%3E%3Cpath d='M430 355c-20-18-2-48 24-48-3 32-24 48-24 48z' fill='white'/%3E%3Cpath d='M430 355c6-12 15-28 24-48' fill='none' stroke='white' stroke-width='.8'/%3E%3C/g%3E%3C!-- MOLECULES --%3E%3Cg opacity='.65'%3E%3Ccircle cx='330' cy='80' r='12' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='375' cy='55' r='8' fill='none' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='365' cy='115' r='9' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cline x1='340' y1='72' x2='368' y2='60' stroke='white' stroke-width='1.5'/%3E%3Cline x1='338' y1='90' x2='358' y2='108' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='330' cy='80' r='4' fill='white' opacity='.4'/%3E%3Ccircle cx='375' cy='55' r='3' fill='white' opacity='.3'/%3E%3Ccircle cx='365' cy='115' r='3' fill='white' opacity='.3'/%3E%3C/g%3E%3Cg opacity='.4'%3E%3Ccircle cx='680' cy='340' r='9' fill='none' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='715' cy='320' r='6' fill='none' stroke='white' stroke-width='1.2'/%3E%3Ccircle cx='710' cy='365' r='7' fill='none' stroke='white' stroke-width='1.2'/%3E%3Cline x1='688' y1='334' x2='710' y2='324' stroke='white' stroke-width='1.2'/%3E%3Cline x1='686' y1='348' x2='704' y2='360' stroke='white' stroke-width='1.2'/%3E%3C/g%3E%3C!-- DATA DOTS GRID --%3E%3Cg opacity='.5'%3E%3Ccircle cx='560' cy='60' r='4' fill='white'/%3E%3Ccircle cx='590' cy='60' r='4' fill='white'/%3E%3Ccircle cx='620' cy='60' r='4' fill='white'/%3E%3Ccircle cx='650' cy='60' r='4' fill='white'/%3E%3Ccircle cx='560' cy='88' r='4' fill='white'/%3E%3Ccircle cx='590' cy='88' r='4' fill='white'/%3E%3Ccircle cx='620' cy='88' r='4' fill='white'/%3E%3Ccircle cx='650' cy='88' r='4' fill='white'/%3E%3Ccircle cx='560' cy='116' r='4' fill='white'/%3E%3Ccircle cx='590' cy='116' r='4' fill='white'/%3E%3Ccircle cx='620' cy='116' r='4' fill='white'/%3E%3Ccircle cx='650' cy='116' r='4' fill='white'/%3E%3C/g%3E%3Cg opacity='.3'%3E%3Ccircle cx='150' cy='280' r='3' fill='white'/%3E%3Ccircle cx='172' cy='280' r='3' fill='white'/%3E%3Ccircle cx='194' cy='280' r='3' fill='white'/%3E%3Ccircle cx='150' cy='300' r='3' fill='white'/%3E%3Ccircle cx='172' cy='300' r='3' fill='white'/%3E%3Ccircle cx='194' cy='300' r='3' fill='white'/%3E%3C/g%3E%3C!-- CONNECTING LINES --%3E%3Cg opacity='.15'%3E%3Cpath d='M120 215 Q250 160 330 80' fill='none' stroke='white' stroke-width='1' stroke-dasharray='4 6'/%3E%3Cpath d='M650 88 Q720 150 760 260' fill='none' stroke='white' stroke-width='1' stroke-dasharray='4 6'/%3E%3Cpath d='M375 55 Q450 50 560 60' fill='none' stroke='white' stroke-width='.8' stroke-dasharray='3 5'/%3E%3C/g%3E%3C/svg%3E");background-size:cover;background-position:center}
+.hero-pat{position:absolute;inset:0;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='400'%3E%3Cpath d='M120 180c0 18-15 32-15 32s-15-14-15-32c0-20 15-45 15-45s15 25 15 45z' fill='white' opacity='.8'/%3E%3Cpath d='M870 110c0 14-11 24-11 24s-11-10-11-24c0-15 11-34 11-34s11 19 11 34z' fill='white' opacity='.6'/%3E%3Cg opacity='.7'%3E%3Crect x='760' y='260' width='16' height='55' rx='3' fill='white'/%3E%3Crect x='782' y='280' width='16' height='35' rx='3' fill='white'/%3E%3Crect x='804' y='245' width='16' height='70' rx='3' fill='white'/%3E%3Crect x='826' y='270' width='16' height='45' rx='3' fill='white'/%3E%3Crect x='848' y='255' width='16' height='60' rx='3' fill='white'/%3E%3C/g%3E%3Cg opacity='.7'%3E%3Cpath d='M900 55c-40-35-5-90 45-90-5 60-45 90-45 90z' fill='white'/%3E%3Cpath d='M900 55c12-22 28-52 45-90' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/g%3E%3Cg opacity='.65'%3E%3Ccircle cx='330' cy='80' r='12' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='375' cy='55' r='8' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cline x1='340' y1='72' x2='368' y2='60' stroke='white' stroke-width='1.5'/%3E%3C/g%3E%3Cg opacity='.5'%3E%3Ccircle cx='560' cy='60' r='4' fill='white'/%3E%3Ccircle cx='590' cy='60' r='4' fill='white'/%3E%3Ccircle cx='620' cy='60' r='4' fill='white'/%3E%3Ccircle cx='560' cy='88' r='4' fill='white'/%3E%3Ccircle cx='590' cy='88' r='4' fill='white'/%3E%3Ccircle cx='620' cy='88' r='4' fill='white'/%3E%3C/g%3E%3C/svg%3E");background-size:cover;background-position:center}
 [data-theme="dark"] .hero-pat{opacity:.08}
-.home-hero h1{font-family:'Kanit',sans-serif;font-size:clamp(22px,3.2vw,32px);font-weight:800;color:#fff;margin-bottom:6px;position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.15)}
-.home-hero p{color:rgba(255,255,255,.75);font-size:14.5px;position:relative;z-index:1}
-.home-hero .h-date{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:6px 18px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.9);margin-top:16px;position:relative;z-index:1}
-.home-hero .h-date .blink{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.5);animation:pulse-dot 2s infinite}
+.hero-row{display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;z-index:1}
+.hero-left h1{font-family:'Kanit',sans-serif;font-size:clamp(20px,2.8vw,28px);font-weight:800;color:#fff;margin-bottom:4px;text-shadow:0 2px 12px rgba(0,0,0,.15)}
+.hero-left p{color:rgba(255,255,255,.7);font-size:14px;margin:0}
+.hero-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.home-hero .h-date{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 16px;font-size:12px;font-weight:600;color:rgba(255,255,255,.9)}
+.home-hero .h-date .blink{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.5);animation:pulse-dot 2s infinite}
+.h-update{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;background:rgba(255,255,255,.08);padding:4px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.08)}
+@media(max-width:600px){.hero-right{flex-direction:column}}
 
-/* Alert Panel */
-.alert-panel{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
-.alert-item{display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:14px;border:1px solid;transition:all .3s cubic-bezier(.4,0,.2,1);cursor:default}
-.alert-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.04)}
+/* ═══ KPI STRIP ═══ */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:1100px){.kpi-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.kpi-strip{grid-template-columns:1fr}}
+.ks-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px 14px;box-shadow:var(--sh);transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.ks-card:hover{transform:translateY(-3px);box-shadow:var(--sh2),0 0 0 1px hsla(var(--hue),60%,50%,.08);border-color:hsla(var(--hue),60%,50%,.12)}
+.ks-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ks-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ks-badge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap}
+.ks-badge.ks-good{background:rgba(22,163,74,.1);color:#16a34a}
+.ks-badge.ks-warn{background:rgba(245,158,11,.1);color:#f59e0b}
+.ks-badge.ks-bad{background:rgba(239,68,68,.1);color:#ef4444}
+.ks-label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.ks-val{font-family:'Kanit',sans-serif;font-size:30px;font-weight:800;line-height:1;color:var(--t1);margin-bottom:3px}
+.ks-val small{font-size:15px;font-weight:700}
+.ks-target{font-size:10.5px;color:var(--t3);font-weight:500;margin-bottom:8px}
+.ks-bar{height:5px;border-radius:100px;background:var(--bg2);overflow:hidden;margin-bottom:8px}
+.ks-fill{height:100%;border-radius:100px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.ks-spark{height:36px}
+.ks-spark canvas{width:100%!important;height:36px!important}
+
+/* ═══ ALERT PANEL ═══ */
+.alert-panel{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.alert-extra{display:flex;flex-direction:column;gap:8px}
+.alert-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:12px;border:1px solid;transition:all .3s cubic-bezier(.4,0,.2,1);cursor:default}
+.alert-item:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.04)}
 .alert-item.a-danger{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(248,113,113,.03));border-color:rgba(239,68,68,.2)}
 .alert-item.a-success{background:linear-gradient(135deg,rgba(22,163,74,.06),rgba(74,222,128,.02));border-color:rgba(22,163,74,.15)}
 .alert-item.a-warn{background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(252,211,77,.03));border-color:rgba(245,158,11,.18)}
 .alert-item.a-info{background:linear-gradient(135deg,rgba(2,132,199,.06),rgba(56,189,248,.02));border-color:rgba(2,132,199,.15)}
-.alert-item .a-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.alert-item .a-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .a-danger .a-icon{background:rgba(239,68,68,.12)}.a-success .a-icon{background:rgba(22,163,74,.1)}.a-warn .a-icon{background:rgba(245,158,11,.12)}.a-info .a-icon{background:rgba(2,132,199,.1)}
 .alert-item .a-body{flex:1;min-width:0}
-.alert-item .a-title{font-size:13.5px;font-weight:700;color:var(--t1)}
-.alert-item .a-desc{font-size:12px;color:var(--t3);margin-top:1px}
-.alert-item .a-time{font-size:10.5px;color:var(--t3);opacity:.6;white-space:nowrap;font-weight:600}
+.alert-item .a-title{font-size:13px;font-weight:700;color:var(--t1)}
+.alert-item .a-desc{font-size:11.5px;color:var(--t3);margin-top:1px}
+.alert-item .a-time{font-size:10px;color:var(--t3);opacity:.6;white-space:nowrap;font-weight:600}
+.alert-count{background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:8px}
+.alert-toggle{width:100%;padding:8px;border:1px dashed var(--border);border-radius:10px;background:transparent;color:var(--t3);font-size:12px;font-weight:600;cursor:pointer;font-family:'Kanit',sans-serif;transition:all .2s}
+.alert-toggle:hover{background:var(--bg2);color:var(--t2);border-color:var(--primary)}
 
-/* Stagger animations — now via Intersection Observer */
+/* Stagger animations */
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* Sparkline KPIs */
-.skpi{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 20px;box-shadow:var(--sh);transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.skpi:hover{transform:translateY(-3px);box-shadow:var(--sh2),0 0 0 1px hsla(var(--hue),60%,50%,.08);border-color:hsla(var(--hue),60%,50%,.12)}
-.skpi .skpi-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.skpi .skpi-label{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
-.skpi .skpi-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
-.skpi .skpi-badge.up{background:rgba(22,163,74,.1);color:#16a34a}
-.skpi .skpi-badge.down{background:rgba(239,68,68,.1);color:#ef4444}
-.skpi .skpi-badge.flat{background:rgba(245,158,11,.1);color:#f59e0b}
-.skpi .skpi-val{font-family:'Kanit',sans-serif;font-size:34px;font-weight:800;line-height:1;color:var(--t1);margin-bottom:2px}
-.skpi .skpi-sub{font-size:11.5px;color:var(--t3);font-weight:500}
-.skpi .skpi-spark{margin-top:10px}
-.skpi .skpi-spark canvas{width:100%!important;height:40px!important}
-.skpig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:22px}
-
-/* Section Cards */
-.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:22px}
-.sec-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:var(--sh);transition:all .35s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative;overflow:hidden}
-.sec-card:hover{transform:translateY(-4px);box-shadow:var(--sh2),0 8px 24px hsla(var(--hue),60%,50%,.08);border-color:var(--primary)}
-.sec-card .sc-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.sec-card .sc-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.sec-card .sc-title{font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;color:var(--t1)}
-.sec-card .sc-sub{font-size:11.5px;color:var(--t3);margin-top:1px}
-.sec-card .sc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sec-card .sc-stat{text-align:center;padding:8px;border-radius:10px;background:var(--bg2)}
-.sec-card .sc-stat .sv{font-family:'Kanit',sans-serif;font-size:20px;font-weight:800;color:var(--t1)}
-.sec-card .sc-stat .sl{font-size:10.5px;color:var(--t3);font-weight:600}
-.sec-card .sc-arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--t3);opacity:.3;transition:all .3s}
-.sec-card:hover .sc-arrow{opacity:.8;right:12px;color:var(--primary)}
+/* ═══ SECTION CARDS 5-GRID ═══ */
+.sec-grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+@media(max-width:1100px){.sec-grid5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.sec-grid5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.sec-grid5{grid-template-columns:1fr}}
+.sc5{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--sh);transition:all .35s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative;overflow:hidden;text-align:center}
+.sc5:hover{transform:translateY(-4px);box-shadow:var(--sh2),0 6px 20px hsla(var(--hue),60%,50%,.08);border-color:var(--primary)}
+.sc5-status{position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.sc5-ok{background:linear-gradient(90deg,#16a34a,#4ade80)}
+.sc5-crit{background:linear-gradient(90deg,#dc2626,#f87171)}
+.sc5-alert{background:linear-gradient(90deg,#d97706,#fbbf24)}
+.sc5-wait{background:linear-gradient(90deg,#94a3b8,#cbd5e1)}
+.sc5-ic{width:40px;height:40px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:8px}
+.sc5-title{font-family:'Kanit',sans-serif;font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.sc5-sub{font-size:10.5px;color:var(--t3);margin-bottom:10px}
+.sc5-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sc5-stats>div{padding:6px 4px;border-radius:8px;background:var(--bg2)}
+.sc5-v{display:block;font-family:'Kanit',sans-serif;font-size:16px;font-weight:800;line-height:1.2}
+.sc5-l{display:block;font-size:9.5px;color:var(--t3);font-weight:600}
+.sc5-pending{opacity:.6}
+.sc5-pending:hover{opacity:.8}
 
 /* Timeline */
-.timeline-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--sh);margin-bottom:22px}
-.timeline-card h3{font-family:'Kanit',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px}
-.timeline-card .tc-sub{font-size:12px;color:var(--t3);margin-bottom:14px}
+.timeline-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--sh)}
+.timeline-card h3{font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px}
+.timeline-card .tc-sub{font-size:11.5px;color:var(--t3);margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -498,149 +540,164 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="topbar"><span class="topicon">🏠</span><h1>ภาพรวมระบบ</h1></div>
 <div class="pg-pad" id="home-content">
 
+<!-- ═══ 1. COMPACT HERO ═══ -->
 <div class="home-hero">
   <div class="hero-pat"></div>
-  <h1>🏥 ระบบข้อมูลสุขภาพ</h1>
-  <p>กลุ่มงานบริการด้านปฐมภูมิแบบองค์รวม โรงพยาบาลทับคล้อ อ.ทับคล้อ จ.พิจิตร</p>
-  <div class="h-date"><span class="blink"></span> <span id="homeDate"></span></div>
+  <div class="hero-row">
+    <div class="hero-left">
+      <h1>🏥 ระบบข้อมูลเฝ้าระวังสุขภาพ</h1>
+      <p>กลุ่มงานบริการด้านปฐมภูมิแบบองค์รวม โรงพยาบาลทับคล้อ</p>
+    </div>
+    <div class="hero-right">
+      <div class="h-date"><span class="blink"></span> <span id="homeDate"></span></div>
+      <div class="h-update">ข้อมูลล่าสุด: Q1/2569</div>
+    </div>
+  </div>
 </div>
 
-<!-- Alert Panel -->
-<div class="stit"><span>🔔 การแจ้งเตือนล่าสุด</span><span class="ln"></span></div>
-<div class="alert-panel">
+<!-- ═══ 2. KPI STRIP (FIRST — Data First principle) ═══ -->
+<div class="stit"><span>📊 ภาพรวมตัวชี้วัด</span><span class="ln"></span></div>
+<div class="kpi-strip">
+  <div class="ks-card">
+    <div class="ks-top"><span class="ks-icon" style="background:rgba(239,68,68,.1)">⚗️</span><span class="ks-badge ks-good">↓ −63%</span></div>
+    <div class="ks-label">Total As เกินอ้างอิง</div>
+    <div class="ks-val" data-count="4">0</div>
+    <div class="ks-target">เป้า 0 คน <span style="color:var(--t3)">| จาก 11→4</span></div>
+    <div class="ks-bar"><div class="ks-fill" style="width:36%;background:linear-gradient(90deg,#16a34a,#4ade80)"></div></div>
+    <div class="ks-spark"><canvas id="spkAs"></canvas></div>
+  </div>
+  <div class="ks-card">
+    <div class="ks-top"><span class="ks-icon" style="background:rgba(124,58,237,.1)">🧪</span><span class="ks-badge ks-good">↓ −34%</span></div>
+    <div class="ks-label">SCN เกิน (ไม่สูบบุหรี่)</div>
+    <div class="ks-val">35.8<small>%</small></div>
+    <div class="ks-target">เป้า <20% <span style="color:var(--t3)">| จาก 69.9%</span></div>
+    <div class="ks-bar"><div class="ks-fill" style="width:64%;background:linear-gradient(90deg,#d97706,#fbbf24)"></div></div>
+    <div class="ks-spark"><canvas id="spkSCN"></canvas></div>
+  </div>
+  <div class="ks-card">
+    <div class="ks-top"><span class="ks-icon" style="background:rgba(2,132,199,.1)">💧</span><span class="ks-badge ks-warn">→ ทรงตัว</span></div>
+    <div class="ks-label">น้ำประปาผ่านเกณฑ์</div>
+    <div class="ks-val">17.6<small>%</small></div>
+    <div class="ks-target">เป้า 80% <span style="color:var(--t3)">| 6/34 แห่ง</span></div>
+    <div class="ks-bar"><div class="ks-fill" style="width:22%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+    <div class="ks-spark"><canvas id="spkWater"></canvas></div>
+  </div>
+  <div class="ks-card">
+    <div class="ks-top"><span class="ks-icon" style="background:rgba(22,163,74,.1)">🌿</span><span class="ks-badge ks-bad">⚠ Q1/69</span></div>
+    <div class="ks-label">น้ำเสีย ผ่านเกณฑ์</div>
+    <div class="ks-val">75<small>%</small></div>
+    <div class="ks-target">เป้า 100% <span style="color:var(--t3)">| 3/4 ไตรมาส</span></div>
+    <div class="ks-bar"><div class="ks-fill" style="width:75%;background:linear-gradient(90deg,#d97706,#fbbf24)"></div></div>
+    <div class="ks-spark"><canvas id="spkWaste"></canvas></div>
+  </div>
+  <div class="ks-card">
+    <div class="ks-top"><span class="ks-icon" style="background:rgba(14,165,233,.1)">🚰</span><span class="ks-badge ks-good">✅ 100%</span></div>
+    <div class="ks-label">น้ำประปา รพ. ผ่านเกณฑ์</div>
+    <div class="ks-val">100<small>%</small></div>
+    <div class="ks-target">เป้า 100% <span style="color:var(--t3)">| 21/21 พารามิเตอร์</span></div>
+    <div class="ks-bar"><div class="ks-fill" style="width:100%;background:linear-gradient(90deg,#16a34a,#4ade80)"></div></div>
+  </div>
+</div>
+
+<!-- ═══ 3. ALERT PANEL (Collapsed — 2 critical + toggle) ═══ -->
+<div class="stit"><span>🔔 การแจ้งเตือน</span><span class="ln"></span><span class="alert-count">5</span></div>
+<div class="alert-panel" id="alertPanel">
   <div class="alert-item a-danger">
     <div class="a-icon">🚨</div>
     <div class="a-body"><div class="a-title">น้ำเสีย Q1/69 ไม่ผ่านเกณฑ์ 3 พารามิเตอร์</div><div class="a-desc">คลอรีน 3.1 mg/L (เกิน 3.1×) | Coliform 9,200 (เกิน 1.84×) | Fecal Coliform 9,200 (เกิน 9.2×)</div></div>
     <div class="a-time">Q1/2569</div>
-  </div>
-  <div class="alert-item a-success">
-    <div class="a-icon">📉</div>
-    <div class="a-body"><div class="a-title">สารหนู (As) ลดลง 63% จากปีก่อน</div><div class="a-desc">Total As เกินอ้างอิง 11→4 คน | Inorganic As 7→3 คน (กลุ่มเดียวกัน 119 คน)</div></div>
-    <div class="a-time">ปี 2568</div>
-  </div>
-  <div class="alert-item a-success">
-    <div class="a-icon">💧</div>
-    <div class="a-body"><div class="a-title">SCN ไม่สูบบุหรี่ลดลงครึ่งหนึ่ง</div><div class="a-desc">69.9% → 35.8% (−34.1%) แนวโน้มดีขึ้นชัดเจน</div></div>
-    <div class="a-time">ปี 2568</div>
   </div>
   <div class="alert-item a-warn">
     <div class="a-icon">🚰</div>
     <div class="a-body"><div class="a-title">น้ำประปารอบเหมือง ผ่านเกณฑ์เพียง 17.6%</div><div class="a-desc">ปี 68 รอบ 2: ผ่าน 6/34 แห่ง | พบ Cd (แคดเมียม) เกินมาตรฐาน 7 แห่ง ⚠️</div></div>
     <div class="a-time">ต.ค. 2568</div>
   </div>
-  <div class="alert-item a-info">
-    <div class="a-icon">📊</div>
-    <div class="a-body"><div class="a-title">ระบบประปาเลิกใช้เพิ่มเป็น 5 แห่ง</div><div class="a-desc">รอบ 1: 4 แห่ง → รอบ 2: 5 แห่ง (#9 วัดจิราพงษ์, #21 บ้านนิคม, #22 บ้านเนินทอง เลิกใช้เพิ่ม)</div></div>
-    <div class="a-time">ปี 2568</div>
-  </div>
-</div>
-
-<!-- Sparkline KPIs -->
-<div class="stit"><span>📈 ตัวชี้วัดสำคัญ</span><span class="ln"></span></div>
-<div class="skpig">
-  <div class="skpi">
-    <div class="skpi-row"><span class="skpi-label">Total As เกินอ้างอิง</span><span class="skpi-badge up">↓ −63%</span></div>
-    <div class="skpi-val" data-count="4">0</div>
-    <div class="skpi-sub">คน (จาก 11 คน ปี 67) — เกณฑ์ >100 µg/L</div>
-    <div class="skpi-spark"><canvas id="spkAs"></canvas></div>
-  </div>
-  <div class="skpi">
-    <div class="skpi-row"><span class="skpi-label">SCN เกิน (ไม่สูบบุหรี่)</span><span class="skpi-badge up">↓ −34.1%</span></div>
-    <div class="skpi-val">35.8<small style="font-size:16px">%</small></div>
-    <div class="skpi-sub">ลดจาก 69.9% ปี 67 — เกณฑ์ >4 mg/L</div>
-    <div class="skpi-spark"><canvas id="spkSCN"></canvas></div>
-  </div>
-  <div class="skpi">
-    <div class="skpi-row"><span class="skpi-label">น้ำประปาผ่านเกณฑ์</span><span class="skpi-badge flat">→ ทรงตัว</span></div>
-    <div class="skpi-val">17.6<small style="font-size:16px">%</small></div>
-    <div class="skpi-sub">6 จาก 34 แห่ง (รอบ 2 ปี 68)</div>
-    <div class="skpi-spark"><canvas id="spkWater"></canvas></div>
-  </div>
-  <div class="skpi">
-    <div class="skpi-row"><span class="skpi-label">น้ำเสีย ผ่านเกณฑ์</span><span class="skpi-badge down">⚠ ล่าสุด</span></div>
-    <div class="skpi-val">75<small style="font-size:16px">%</small></div>
-    <div class="skpi-sub">ผ่าน 3/4 ไตรมาส — Q1/69 ไม่ผ่าน</div>
-    <div class="skpi-spark"><canvas id="spkWaste"></canvas></div>
-  </div>
-</div>
-
-<!-- Timeline Chart -->
-<div class="stit"><span>📉 แนวโน้มข้ามปี — เปรียบเทียบตัวชี้วัดสำคัญ</span><span class="ln"></span></div>
-<div class="cgr">
-  <!-- Health indicators - compact stat comparison replacing oversized line chart -->
-  <div class="timeline-card" style="grid-column:1/-1">
-    <h3>แนวโน้มตัวชี้วัดสุขภาพ 2567 → 2568</h3>
-    <div class="tc-sub">เปรียบเทียบกลุ่มเดียวกัน 119 คน | ค่าที่ลดลง = แนวโน้มดีขึ้น ✅</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px">
-      <!-- Total As -->
-      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(239,68,68,.02));border:1px solid rgba(239,68,68,.1);text-align:center">
-        <div style="font-size:13.5px;font-weight:600;color:#ef4444;margin-bottom:10px">Total As เกินอ้างอิง</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
-          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">11</div><div style="font-size:12px;color:var(--t3)">คน (67)</div></div>
-          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
-          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">4</div><div style="font-size:12px;color:var(--t3)">คน (68)</div></div>
-        </div>
-        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −63.6%</div>
-      </div>
-      <!-- Inorganic As -->
-      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(245,158,11,.02));border:1px solid rgba(245,158,11,.1);text-align:center">
-        <div style="font-size:13.5px;font-weight:600;color:#d97706;margin-bottom:10px">Inorganic As เกิน</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
-          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">7</div><div style="font-size:12px;color:var(--t3)">คน (67)</div></div>
-          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
-          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">3</div><div style="font-size:12px;color:var(--t3)">คน (68)</div></div>
-        </div>
-        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −57.1%</div>
-      </div>
-      <!-- SCN -->
-      <div style="border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(124,58,237,.02));border:1px solid rgba(124,58,237,.1);text-align:center">
-        <div style="font-size:13.5px;font-weight:600;color:#7c3aed;margin-bottom:10px">SCN เกิน (ไม่สูบบุหรี่)</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
-          <div><div style="font-size:28px;font-weight:800;color:var(--t2);font-family:'Kanit'">69.9%</div><div style="font-size:12px;color:var(--t3)">ปี 67</div></div>
-          <div style="font-size:22px;color:#16a34a;font-weight:700">→</div>
-          <div><div style="font-size:28px;font-weight:800;color:#16a34a;font-family:'Kanit'">35.8%</div><div style="font-size:12px;color:var(--t3)">ปี 68</div></div>
-        </div>
-        <div style="margin-top:10px;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:#16a34a;font-size:13px;font-weight:700;display:inline-block">↓ −34.1%</div>
-      </div>
+  <div class="alert-extra" id="alertExtra" style="display:none">
+    <div class="alert-item a-success">
+      <div class="a-icon">📉</div>
+      <div class="a-body"><div class="a-title">สารหนู (As) ลดลง 63% จากปีก่อน</div><div class="a-desc">Total As เกินอ้างอิง 11→4 คน | Inorganic As 7→3 คน (กลุ่มเดียวกัน 119 คน)</div></div>
+      <div class="a-time">ปี 2568</div>
+    </div>
+    <div class="alert-item a-success">
+      <div class="a-icon">💧</div>
+      <div class="a-body"><div class="a-title">SCN ไม่สูบบุหรี่ลดลงครึ่งหนึ่ง</div><div class="a-desc">69.9% → 35.8% (−34.1%) แนวโน้มดีขึ้นชัดเจน</div></div>
+      <div class="a-time">ปี 2568</div>
+    </div>
+    <div class="alert-item a-info">
+      <div class="a-icon">📊</div>
+      <div class="a-body"><div class="a-title">ระบบประปาเลิกใช้เพิ่มเป็น 5 แห่ง</div><div class="a-desc">รอบ 1: 4 แห่ง → รอบ 2: 5 แห่ง (#9 วัดจิราพงษ์, #21 บ้านนิคม, #22 บ้านเนินทอง เลิกใช้เพิ่ม)</div></div>
+      <div class="a-time">ปี 2568</div>
     </div>
   </div>
+  <button class="alert-toggle" id="alertToggle" onclick="toggleAlerts()">ดูทั้งหมด (3 รายการเพิ่มเติม) ▾</button>
+</div>
+
+<!-- ═══ 4. TREND CHARTS (2 charts side-by-side — no duplicate health compare) ═══ -->
+<div class="stit"><span>📈 แนวโน้มข้ามปี</span><span class="ln"></span></div>
+<div class="cgr">
   <div class="timeline-card">
     <h3>อัตราผ่านเกณฑ์น้ำประปา</h3>
-    <div class="tc-sub">4 รอบตรวจ (ปี 67-68)</div>
+    <div class="tc-sub">4 รอบตรวจ (ปี 67-68) | เป้าหมาย 80%</div>
     <div class="cw" style="height:220px"><canvas id="tlWater"></canvas></div>
   </div>
   <div class="timeline-card">
     <h3>คุณภาพน้ำเสีย — Coliform</h3>
-    <div class="tc-sub">4 ไตรมาส (Q3/67 — Q1/69)</div>
+    <div class="tc-sub">4 ไตรมาส (Q3/67 — Q1/69) | เกณฑ์ 5,000 MPN</div>
     <div class="cw" style="height:220px"><canvas id="tlWaste"></canvas></div>
   </div>
 </div>
 
-<!-- Section Cards -->
+<!-- ═══ 5. SECTION CARDS (5 modules + status badges) ═══ -->
 <div class="stit"><span>📂 เข้าถึงข้อมูลแต่ละหมวด</span><span class="ln"></span></div>
-<div class="sec-grid">
-  <div class="sec-card" onclick="goPage('mine');highlightNav('mine')">
-    <div class="sc-arrow">→</div>
-    <div class="sc-head"><div class="sc-ic" style="background:rgba(245,158,11,.1)">⛏️</div><div><div class="sc-title">ผลตรวจสุขภาพประชาชน</div><div class="sc-sub">สารหนู & Thiocyanate — ปี 2567-2568</div></div></div>
-    <div class="sc-stats">
-      <div class="sc-stat"><div class="sv" style="color:var(--success)">2.7%</div><div class="sl">Total As เกิน (ปี 68)</div></div>
-      <div class="sc-stat"><div class="sv" style="color:var(--success)">35.8%</div><div class="sl">SCN เกิน (ไม่สูบ)</div></div>
+<div class="sec-grid5">
+  <div class="sc5" onclick="goPage('mine');highlightNav('mine')">
+    <div class="sc5-status sc5-ok">แนวโน้มดี</div>
+    <div class="sc5-ic" style="background:rgba(245,158,11,.1)">⛏️</div>
+    <div class="sc5-title">ผลตรวจสุขภาพประชาชน</div>
+    <div class="sc5-sub">สารหนู & SCN — ปี 2567-2568</div>
+    <div class="sc5-stats">
+      <div><span class="sc5-v" style="color:#16a34a">2.7%</span><span class="sc5-l">As เกิน</span></div>
+      <div><span class="sc5-v" style="color:#d97706">35.8%</span><span class="sc5-l">SCN เกิน</span></div>
     </div>
   </div>
-  <div class="sec-card" onclick="goPage('water');highlightNav('water')">
-    <div class="sc-arrow">→</div>
-    <div class="sc-head"><div class="sc-ic" style="background:rgba(2,132,199,.1)">💧</div><div><div class="sc-title">น้ำประปารอบเหมืองทอง</div><div class="sc-sub">42 ระบบ 23 พารามิเตอร์ — 4 รอบตรวจ</div></div></div>
-    <div class="sc-stats">
-      <div class="sc-stat"><div class="sv" style="color:var(--danger)">82.4%</div><div class="sl">ไม่ผ่านเกณฑ์ (ล่าสุด)</div></div>
-      <div class="sc-stat"><div class="sv" style="color:var(--warning)">5</div><div class="sl">เลิกใช้งาน</div></div>
+  <div class="sc5" onclick="goPage('water');highlightNav('water')">
+    <div class="sc5-status sc5-crit">วิกฤต</div>
+    <div class="sc5-ic" style="background:rgba(2,132,199,.1)">💧</div>
+    <div class="sc5-title">น้ำประปารอบเหมือง</div>
+    <div class="sc5-sub">42 ระบบ — 4 รอบตรวจ</div>
+    <div class="sc5-stats">
+      <div><span class="sc5-v" style="color:#ef4444">82.4%</span><span class="sc5-l">ไม่ผ่าน</span></div>
+      <div><span class="sc5-v" style="color:#d97706">7</span><span class="sc5-l">พบ Cd เกิน</span></div>
     </div>
   </div>
-  <div class="sec-card" onclick="goPage('waste');highlightNav('waste')">
-    <div class="sc-arrow">→</div>
-    <div class="sc-head"><div class="sc-ic" style="background:rgba(22,163,74,.1)">🌿</div><div><div class="sc-title">ผลบำบัดน้ำเสีย รพ.ทับคล้อ</div><div class="sc-sub">10 พารามิเตอร์ — ทุกไตรมาส</div></div></div>
-    <div class="sc-stats">
-      <div class="sc-stat"><div class="sv" style="color:var(--danger)">ไม่ผ่าน</div><div class="sl">Q1/2569</div></div>
-      <div class="sc-stat"><div class="sv" style="color:var(--success)">75%</div><div class="sl">ผ่าน 3/4 ไตรมาส</div></div>
+  <div class="sc5" onclick="goPage('waste');highlightNav('waste')">
+    <div class="sc5-status sc5-alert">เฝ้าระวัง</div>
+    <div class="sc5-ic" style="background:rgba(22,163,74,.1)">🌿</div>
+    <div class="sc5-title">น้ำเสีย รพ.ทับคล้อ</div>
+    <div class="sc5-sub">10 พารามิเตอร์ — ทุกไตรมาส</div>
+    <div class="sc5-stats">
+      <div><span class="sc5-v" style="color:#ef4444">ไม่ผ่าน</span><span class="sc5-l">Q1/69</span></div>
+      <div><span class="sc5-v" style="color:#16a34a">75%</span><span class="sc5-l">ผ่านรวม</span></div>
+    </div>
+  </div>
+  <div class="sc5" onclick="goPage('tap');highlightNav('tap')">
+    <div class="sc5-status sc5-ok">ปกติ</div>
+    <div class="sc5-ic" style="background:rgba(14,165,233,.1)">🚰</div>
+    <div class="sc5-title">น้ำประปา รพ.ทับคล้อ</div>
+    <div class="sc5-sub">21 พารามิเตอร์ — 4 รอบตรวจ</div>
+    <div class="sc5-stats">
+      <div><span class="sc5-v" style="color:#16a34a">100%</span><span class="sc5-l">ผ่านเกณฑ์</span></div>
+      <div><span class="sc5-v" style="color:#16a34a">21/21</span><span class="sc5-l">ปี 68</span></div>
+    </div>
+  </div>
+  <div class="sc5 sc5-pending" onclick="goPage('occ');highlightNav('occ')">
+    <div class="sc5-status sc5-wait">รอข้อมูล</div>
+    <div class="sc5-ic" style="background:rgba(148,163,184,.1)">🏭</div>
+    <div class="sc5-title">งานอาชีวอนามัย</div>
+    <div class="sc5-sub">อยู่ระหว่างจัดเตรียมข้อมูล</div>
+    <div class="sc5-stats">
+      <div><span class="sc5-v" style="color:var(--t3)">—</span><span class="sc5-l">รอเพิ่ม</span></div>
+      <div><span class="sc5-v" style="color:var(--t3)">—</span><span class="sc5-l">รอเพิ่ม</span></div>
     </div>
   </div>
 </div>
@@ -1309,10 +1366,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <!-- ═══ Key Parameters Comparison ═══ -->
 <div class="stit"><span>📉 เปรียบเทียบค่าสำคัญ — ปีงบ 2567 vs 2568</span><span class="ln"></span></div>
 <div class="cgr">
-  <div class="cc"><h3>ค่า TDS (ของแข็งละลาย)</h3><div class="cs">เกณฑ์ ≤500 mg/L</div><div class="cw"><canvas id="tapTDS"></canvas></div></div>
-  <div class="cc"><h3>ค่า Hardness (ความกระด้าง)</h3><div class="cs">เกณฑ์ ≤300 mg/L CaCO₃</div><div class="cw"><canvas id="tapHard"></canvas></div></div>
-  <div class="cc"><h3>ค่า pH</h3><div class="cs">เกณฑ์ 6.5-8.5</div><div class="cw"><canvas id="tapPH"></canvas></div></div>
-  <div class="cc"><h3>สัดส่วนด้านที่ผ่านเกณฑ์</h3><div class="cs">ทุกรอบรวม ปีงบ 2567-2568</div><div class="cw"><canvas id="tapPassDn"></canvas></div></div>
+  <div class="cc"><h3>ค่า TDS (ของแข็งละลาย)</h3><div class="cs">เกณฑ์ ≤500 mg/L | <span style="color:#7c3aed">■</span> ปี 67 <span style="color:#0284c7">■</span> ปี 68</div><div class="cw" style="height:240px"><canvas id="tapTDS"></canvas></div></div>
+  <div class="cc"><h3>ค่า Hardness (ความกระด้าง)</h3><div class="cs">เกณฑ์ ≤300 mg/L CaCO₃ | <span style="color:#7c3aed">■</span> ปี 67 <span style="color:#d97706">■</span> ปี 68</div><div class="cw" style="height:240px"><canvas id="tapHard"></canvas></div></div>
+  <div class="cc"><h3>ค่า pH</h3><div class="cs">เกณฑ์ 6.5-8.5 | <span style="color:#7c3aed">■</span> ปี 67 <span style="color:#0891b2">■</span> ปี 68</div><div class="cw" style="height:240px"><canvas id="tapPH"></canvas></div></div>
+  <div class="cc"><h3>สัดส่วนด้านที่ผ่านเกณฑ์</h3><div class="cs">ทุกรอบรวม ปีงบ 2567-2568</div><div class="cw" style="height:240px"><canvas id="tapPassDn"></canvas></div></div>
 </div>
 
 <!-- ═══ Summary Box ═══ -->
@@ -1452,6 +1509,7 @@ function highlightNav(target){
 }
 function togSub(el,subId){document.getElementById(subId).classList.toggle('open');el.classList.toggle('expanded')}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+function toggleAlerts(){var extra=document.getElementById('alertExtra');var btn=document.getElementById('alertToggle');if(!extra||!btn)return;if(extra.style.display==='none'){extra.style.display='flex';btn.textContent='ซ่อนรายการ ▴'}else{extra.style.display='none';btn.textContent='ดูทั้งหมด (3 รายการเพิ่มเติม) ▾'}}
 
 /* ═══ TAB SWITCHERS ═══ */
 function swY(y,btn){
@@ -1507,7 +1565,7 @@ function togM(el){el.classList.toggle('open')}
 /* ═══ COUNT UP ═══ */
 function runCountUp(container){
   if(!container)return;
-  container.querySelectorAll('.kpi-vl[data-count]').forEach(el=>{
+  container.querySelectorAll('.kpi-vl[data-count],.ks-val[data-count]').forEach(el=>{
     const target=parseFloat(el.dataset.count);const suffix=el.dataset.suffix||'';
     const isFloat=String(target).includes('.');
     let current=0;const step=isFloat?target/40:Math.max(1,Math.floor(target/40));
@@ -1522,9 +1580,11 @@ function runCountUp(container){
   const hd=document.getElementById('homeDate');
   if(hd){
     const now=new Date();
-    hd.textContent='อัปเดตล่าสุด: '+now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+    hd.textContent=now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   }
   setTimeout(()=>runCountUp(document.getElementById('home-content')),400);
+  // Animate KPI progress bars
+  document.querySelectorAll('.ks-fill').forEach(bar=>{var tw=bar.style.width;bar.style.width='0';setTimeout(function(){bar.style.width=tw},500)});
   const spkOpt={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},elements:{point:{radius:0},line:{tension:.4,borderWidth:2.5}},animation:{duration:1000,easing:'easeOutQuart'}};
   function mkSpk(id,data,color,fillColor){
     const ctx=document.getElementById(id);if(!ctx)return;
@@ -1835,32 +1895,45 @@ document.addEventListener('click',e=>{if(!e.target.closest('.tb-dd'))closeDDs()}
 
 /* ═══ EXPORT WORD (.docx) — docx.js v8.5 ═══ */
 let rTap=false;
-function renderTap(){if(rTap)return;rTap=true;
-const cc=getChartColors();
+function renderTap(){if(rTap)return;
+var cc=getChartColors();
 
-// 1. Overall Pass/Fail bar
-safeChart('tapOvr',{type:'bar',data:{labels:['รอบ 1/67\nก่อนเข้าระบบ','รอบ 1/67\nหลังเข้าระบบ','รอบ 2/67\nก่อนเข้าระบบ','รอบ 2/67\nหลังเข้าระบบ','รอบ 1/68\nก่อนเข้าระบบ','รอบ 1/68\nหลังเข้าระบบ','รอบ 2/68\nก่อนเข้าระบบ','รอบ 2/68\nหลังเข้าระบบ'],datasets:[{label:'ผ่านเกณฑ์',data:[21,21,19,21,21,21,21,21],backgroundColor:['#16a34a','#16a34a','#ef4444','#16a34a','#16a34a','#16a34a','#16a34a','#16a34a'],borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.x+'/21 พารามิเตอร์'+(x.parsed.x<21?' ❌':' ✅')}}},scales:{x:{beginAtZero:true,max:21,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'}},y:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+try{
+safeChart('tapOvr',{type:'bar',data:{labels:['รอบ 1/67\nก่อนเข้าระบบ','รอบ 1/67\nหลังเข้าระบบ','รอบ 2/67\nก่อนเข้าระบบ','รอบ 2/67\nหลังเข้าระบบ','รอบ 1/68\nก่อนเข้าระบบ','รอบ 1/68\nหลังเข้าระบบ','รอบ 2/68\nก่อนเข้าระบบ','รอบ 2/68\nหลังเข้าระบบ'],datasets:[{label:'ผ่านเกณฑ์',data:[21,21,19,21,21,21,21,21],backgroundColor:['#16a34a','#16a34a','#ef4444','#16a34a','#16a34a','#16a34a','#16a34a','#16a34a'],borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.x+'/21 พารามิเตอร์'+(x.parsed.x<21?' ❌':' ✅')}}}},scales:{x:{beginAtZero:true,max:21,grid:{color:cc.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},y:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+}catch(e){console.warn('tapOvr:',e)}
 
-// 2. Pass by dimension
-safeChart('tapDim',{type:'bar',data:{labels:['กายภาพ\n(สี ขุ่น pH)','เคมี\n(TDS,Hardness ฯ)','โลหะหนัก\n(9 ตัว)','ชีวภาพ\n(Coliform,E.coli)'],datasets:[{label:'% ผ่านเกณฑ์',data:[100,100,100,87.5],backgroundColor:[P.gn,P.bl,P.pu,'rgba(245,158,11,.7)'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+'%'}}},scales:{y:{beginAtZero:true,max:110,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+try{
+safeChart('tapDim',{type:'bar',data:{labels:['กายภาพ\n(สี ขุ่น pH)','เคมี\n(TDS,Hardness ฯ)','โลหะหนัก\n(9 ตัว)','ชีวภาพ\n(Coliform,E.coli)'],datasets:[{label:'% ผ่านเกณฑ์',data:[100,100,100,87.5],backgroundColor:[P.gn,P.bl,P.pu,'rgba(245,158,11,.7)'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.y+'%'}}}},scales:{y:{beginAtZero:true,max:110,grid:{color:cc.g},ticks:{callback:function(v){return v+'%'},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+}catch(e){console.warn('tapDim:',e)}
 
-// 3. Timeline — pass count per round
-safeChart('tapTimeline',{type:'line',data:{labels:['รอบ 1/67\n(ม.ค.67)','รอบ 2/67\n(ส.ค.67)','รอบ 1/68\n(มี.ค.68)','รอบ 2/68\n(ส.ค.68)'],datasets:[{label:'น้ำก่อนเข้าระบบ',data:[21,19,21,21],borderColor:'#0284c7',backgroundColor:'rgba(2,132,199,.08)',fill:true,tension:.3,pointRadius:7,pointHoverRadius:10,borderWidth:3,pointBackgroundColor:['#16a34a','#ef4444','#16a34a','#16a34a'],pointBorderColor:'#fff',pointBorderWidth:2},{label:'น้ำหลังเข้าระบบ',data:[21,21,21,21],borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.06)',fill:true,tension:.3,pointRadius:7,pointHoverRadius:10,borderWidth:3,pointBackgroundColor:'#16a34a',pointBorderColor:'#fff',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:12},usePointStyle:true,pointStyle:'circle',padding:16}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+'/21'+(x.parsed.y<21?' ❌':' ✅')}}},scales:{y:{min:17,max:22,grid:{color:cc.g},ticks:{stepSize:1,color:'#94a3b8',callback:v=>v+'/21'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}},animation:{duration:1200,easing:'easeOutQuart'}}});
+try{
+safeChart('tapTimeline',{type:'line',data:{labels:['รอบ 1/67\n(ม.ค.67)','รอบ 2/67\n(ส.ค.67)','รอบ 1/68\n(มี.ค.68)','รอบ 2/68\n(ส.ค.68)'],datasets:[{label:'น้ำก่อนเข้าระบบ',data:[21,19,21,21],borderColor:'#0284c7',backgroundColor:'rgba(2,132,199,.08)',fill:true,tension:0.3,pointRadius:7,pointHoverRadius:10,borderWidth:3,pointBackgroundColor:['#16a34a','#ef4444','#16a34a','#16a34a'],pointBorderColor:'#fff',pointBorderWidth:2},{label:'น้ำหลังเข้าระบบ',data:[21,21,21,21],borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.06)',fill:true,tension:0.3,pointRadius:7,pointHoverRadius:10,borderWidth:3,pointBackgroundColor:'#16a34a',pointBorderColor:'#fff',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:12},usePointStyle:true,pointStyle:'circle',padding:16}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+'/21'+(x.parsed.y<21?' ❌':' ✅')}}}},scales:{y:{min:17,max:22,grid:{color:cc.g},ticks:{stepSize:1,color:'#94a3b8',callback:function(v){return v+'/21'}}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+}catch(e){console.warn('tapTimeline:',e)}
 
-// 4. TDS comparison (2568)
-safeChart('tapTDS',{type:'bar',data:{labels:['รอบ 1 ก่อนเข้าระบบ','รอบ 1 หลังเข้าระบบ\n(OPD)','รอบ 2 ก่อนเข้าระบบ','รอบ 2 หลังเข้าระบบ\n(IPD)'],datasets:[{label:'TDS (mg/L)',data:[104,114,120,154],backgroundColor:[P.bl,P.t2,P.bl,P.t2],borderRadius:8,borderSkipped:false},{label:'เกณฑ์ (≤500)',data:[500,500,500,500],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;return x.dataset.label+': '+v+' mg/L'}}}},scales:{y:{beginAtZero:true,max:550,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:9}}}}}});
+// ═══ COMPARISON CHARTS (with delay for layout stability) ═══
+setTimeout(function(){
+  var cc2=getChartColors();
+  try{
+  safeChart('tapTDS',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'TDS (mg/L)',data:[98,100,224.6,224.6,104,114,120,154],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.bl,P.b2,P.bl,P.b2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤500',data:[500,500,500,500,500,500,500,500],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:550,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  }catch(e){console.warn('tapTDS:',e)}
 
-// 5. Hardness comparison (2568)
-safeChart('tapHard',{type:'bar',data:{labels:['รอบ 1 ก่อนเข้าระบบ','รอบ 1 หลังเข้าระบบ\n(OPD)','รอบ 2 ก่อนเข้าระบบ','รอบ 2 หลังเข้าระบบ\n(IPD)'],datasets:[{label:'Hardness (mg/L)',data:[68.6,5.7,64.4,36.2],backgroundColor:[P.or,P.o2,P.or,P.o2],borderRadius:8,borderSkipped:false},{label:'เกณฑ์ (≤300)',data:[300,300,300,300],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{callbacks:{label:x=>{let v=x.parsed.y;return x.dataset.label+': '+v+' mg/L'}}}},scales:{y:{beginAtZero:true,max:350,grid:{color:cc.g},ticks:{callback:v=>v,color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:9}}}}}});
+  try{
+  safeChart('tapHard',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'Hardness (mg/L CaCO₃)',data:[78,78,61.1,29.2,68.6,5.7,64.4,36.2],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.or,P.o2,P.or,P.o2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤300',data:[300,300,300,300,300,300,300,300],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:350,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  }catch(e){console.warn('tapHard:',e)}
 
-// 6. pH comparison (2568) - horizontal line chart style
-safeChart('tapPH',{type:'bar',data:{labels:['รอบ 1 ก่อน','รอบ 1 หลัง(OPD)','รอบ 2 ก่อน','รอบ 2 หลัง(IPD)'],datasets:[{label:'pH',data:[8.0,7.8,7.92,7.78],backgroundColor:[P.cy,P.c2,P.cy,P.c2],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>'pH: '+x.parsed.y}},annotation:{annotations:{min:{type:'line',yMin:6.5,yMax:6.5,borderColor:'rgba(239,68,68,.5)',borderWidth:1.5,borderDash:[4,3]},max:{type:'line',yMin:8.5,yMax:8.5,borderColor:'rgba(239,68,68,.5)',borderWidth:1.5,borderDash:[4,3]}}}},scales:{y:{min:5.5,max:9.5,grid:{color:cc.g},ticks:{color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:9}}}}}});
+  try{
+  safeChart('tapPH',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'pH',data:[8.1,7.9,7.8,6.5,8.0,7.8,7.92,7.78],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.cy,P.c2,P.cy,P.c2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ต่ำ (6.5)',data:[6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false},{label:'เกณฑ์สูง (8.5)',data:[8.5,8.5,8.5,8.5,8.5,8.5,8.5,8.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){if(x.datasetIndex===0)return 'pH: '+x.parsed.y;return x.dataset.label}}}},scales:{y:{min:5.5,max:9.5,grid:{color:cc2.g},ticks:{color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  }catch(e){console.warn('tapPH:',e)}
 
-// 7. Doughnut — pass by dimension (2568)
-dn('tapPassDn',['กายภาพ 100%','เคมี 100%','โลหะหนัก 100%','ชีวภาพ 100%'],[3,8,8,2],[P.gn,P.bl,P.pu,P.cy],'52%');
+  try{
+  safeChart('tapPassDn',{type:'doughnut',data:{labels:['กายภาพ 100%','เคมี 100%','โลหะหนัก 100%','ชีวภาพ 100%'],datasets:[{data:[3,8,8,2],backgroundColor:[P.gn,P.bl,P.pu,P.cy],borderWidth:2,borderColor:bdr(),hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}});
+  }catch(e){console.warn('tapPassDn:',e)}
+  try{resizeChartsIn(document.getElementById('page-tap'))}catch(e){}
+},400);
 
-// ═══ HEAT TABLES ═══
-const params67=[
+// ═══ HEAT TABLE 2567 ═══
+try{
+var params67=[
   {name:'สีปรากฏ (Color)',std:'≤15 Pt-Co',r1b:'3',r1a:'1',r2b:'6',r2a:'1',p:[1,1,1,1]},
   {name:'ความขุ่น (Turbidity)',std:'≤5 NTU',r1b:'0.45',r1a:'0.10',r2b:'1.08',r2a:'0.11',p:[1,1,1,1]},
   {name:'pH',std:'6.5-8.5',r1b:'8.1',r1a:'7.9',r2b:'7.8',r2a:'6.5',p:[1,1,1,1]},
@@ -1883,63 +1956,66 @@ const params67=[
   {name:'Coliforms',std:'<1.1 MPN',r1b:'<1.1',r1a:'<1.1',r2b:'>23',r2a:'<1.1',p:[1,1,0,1]},
   {name:'E.coli',std:'<1.1 MPN',r1b:'<1.1',r1a:'<1.1',r2b:'>23',r2a:'<1.1',p:[1,1,0,1]}
 ];
-
-let ht67='<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:12px">';
+var ht67='<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:12px">';
 ht67+='<tr style="font-weight:700;color:var(--t2)"><td style="padding:8px 10px;border-radius:8px;background:var(--bg2);min-width:140px">พารามิเตอร์</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center;min-width:80px">มาตรฐาน</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 ก่อนเข้าระบบ<br><small>26 ม.ค. 67</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 หลังเข้าระบบ<br><small>(IPD) 26 ม.ค. 67</small></td><td style="padding:8px;border-radius:8px;background:rgba(239,68,68,.08);text-align:center">รอบ 2 ก่อนเข้าระบบ<br><small>16 ส.ค. 67</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 2 หลังเข้าระบบ<br><small>(แผนไทย) 16 ส.ค. 67</small></td></tr>';
-params67.forEach(r=>{
+params67.forEach(function(r){
   ht67+='<tr><td style="padding:6px 10px;font-weight:600;color:var(--t1);border-radius:6px;background:var(--card)">'+r.name+'</td><td style="padding:6px;text-align:center;color:var(--t3);border-radius:6px;background:var(--card);font-size:10.5px">'+r.std+'</td>';
-  [r.r1b,r.r1a,r.r2b,r.r2a].forEach((v,i)=>{
-    const pass=r.p[i];const bg=pass?'rgba(22,163,74,.12)':'rgba(239,68,68,.15)';const cl=pass?'#16a34a':'#ef4444';const icon=pass?'✅':'❌';
-    ht67+='<td style="padding:6px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-weight:600">'+icon+' '+v+'</td>';
+  [r.r1b,r.r1a,r.r2b,r.r2a].forEach(function(v,i){
+    var pass=r.p[i];var bg=pass?'rgba(22,163,74,.12)':'rgba(239,68,68,.15)';var cl=pass?'#16a34a':'#ef4444';var ic=pass?'✅':'❌';
+    ht67+='<td style="padding:6px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-weight:600">'+ic+' '+v+'</td>';
   });
   ht67+='</tr>';
 });
 ht67+='<tr style="font-weight:700"><td style="padding:8px 10px;border-radius:6px;background:var(--bg2);color:var(--t1)">รวมผ่าน</td><td></td>';
-[21,21,19,21].forEach(n=>{const bg=n===21?'rgba(22,163,74,.2)':'rgba(239,68,68,.2)';const cl=n===21?'#16a34a':'#ef4444';ht67+='<td style="padding:8px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-size:13px">'+(n===21?'✅ 21/21':'❌ '+n+'/21')+'</td>'});
+[21,21,19,21].forEach(function(n){var bg=n===21?'rgba(22,163,74,.2)':'rgba(239,68,68,.2)';var cl=n===21?'#16a34a':'#ef4444';ht67+='<td style="padding:8px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-size:13px">'+(n===21?'✅ 21/21':'❌ '+n+'/21')+'</td>'});
 ht67+='</tr></table>';
-document.getElementById('tapTable67').innerHTML=ht67;
+var el67=document.getElementById('tapTable67');if(el67)el67.innerHTML=ht67;
+}catch(e){console.warn('tapTable67:',e)}
 
-// ═══ 2568 TABLE ═══
-const params68=[
+// ═══ HEAT TABLE 2568 ═══
+try{
+var params68=[
   {name:'สีปรากฏ (Color)',std:'≤15 Pt-Co',r1b:'1',r1a:'1',r2b:'<1',r2a:'<1',p:[1,1,1,1]},
   {name:'ความขุ่น (Turbidity)',std:'≤5 NTU',r1b:'0.14',r1a:'0.24',r2b:'0.19',r2a:'0.48',p:[1,1,1,1]},
   {name:'pH',std:'6.5-8.5',r1b:'8.0',r1a:'7.8',r2b:'7.92',r2a:'7.78',p:[1,1,1,1]},
   {name:'TDS',std:'≤500 mg/L',r1b:'104',r1a:'114',r2b:'120',r2a:'154',p:[1,1,1,1]},
-  {name:'ความกระด้าง (Hardness)',std:'≤300 mg/L',r1b:'68.6',r1a:'<5.7',r2b:'64.4',r2a:'36.2',p:[1,1,1,1]},
-  {name:'ซัลเฟต (Sulfate)',std:'≤250 mg/L',r1b:'8',r1a:'9',r2b:'4.52',r2a:'5.16',p:[1,1,1,1]},
-  {name:'คลอไรด์ (Chloride)',std:'≤250 mg/L',r1b:'5',r1a:'6',r2b:'10.2',r2a:'11.0',p:[1,1,1,1]},
-  {name:'ไนเตรท (Nitrate)',std:'≤50 mg/L',r1b:'1.8',r1a:'ND',r2b:'1.50',r2a:'0.88',p:[1,1,1,1]},
-  {name:'ฟลูออไรด์ (Fluoride)',std:'≤0.7 mg/L',r1b:'0.13',r1a:'0.14',r2b:'0.14',r2a:'0.13',p:[1,1,1,1]},
-  {name:'ไนไตรท์ (Nitrite)',std:'≤3 mg/L',r1b:'ND',r1a:'<0.02',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'เหล็ก (Iron)',std:'≤0.3 mg/L',r1b:'<0.010',r1a:'<0.010',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'แมงกานีส (Mn)',std:'≤0.3 mg/L',r1b:'<0.010',r1a:'ND',r2b:'<MDL',r2a:'0.0625',p:[1,1,1,1]},
-  {name:'ทองแดง (Cu)',std:'≤1 mg/L',r1b:'ND',r1a:'ND',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'สังกะสี (Zn)',std:'≤3 mg/L',r1b:'<0.010',r1a:'0.019',r2b:'<LOQ',r2a:'<LOQ',p:[1,1,1,1]},
-  {name:'ตะกั่ว (Pb)',std:'≤0.01 mg/L',r1b:'ND',r1a:'ND',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'โครเมียม (Cr)',std:'≤0.05 mg/L',r1b:'ND',r1a:'ND',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'แคดเมียม (Cd)',std:'≤0.003 mg/L',r1b:'ND',r1a:'ND',r2b:'0.0028',r2a:'0.0028',p:[1,1,1,1]},
-  {name:'สารหนู (As)',std:'≤0.01 mg/L',r1b:'ND',r1a:'ND',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
-  {name:'ปรอท (Hg)',std:'≤0.001 mg/L',r1b:'ND',r1a:'ND',r2b:'<MDL',r2a:'<MDL',p:[1,1,1,1]},
+  {name:'ความกระด้าง (Hardness)',std:'≤300 mg/L',r1b:'68.6',r1a:'5.7',r2b:'64.4',r2a:'36.2',p:[1,1,1,1]},
+  {name:'ซัลเฟต (Sulfate)',std:'≤250 mg/L',r1b:'5',r1a:'5',r2b:'5',r2a:'5',p:[1,1,1,1]},
+  {name:'คลอไรด์ (Chloride)',std:'≤250 mg/L',r1b:'8',r1a:'7',r2b:'12',r2a:'7',p:[1,1,1,1]},
+  {name:'ไนเตรท (Nitrate)',std:'≤50 mg/L',r1b:'1.62',r1a:'1.04',r2b:'1.86',r2a:'1.41',p:[1,1,1,1]},
+  {name:'ฟลูออไรด์ (Fluoride)',std:'≤0.7 mg/L',r1b:'0.15',r1a:'0.11',r2b:'0.13',r2a:'0.09',p:[1,1,1,1]},
+  {name:'ไนไตรท์ (Nitrite)',std:'≤3 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'เหล็ก (Iron)',std:'≤0.3 mg/L',r1b:'0.019',r1a:'ND',r2b:'0.012',r2a:'ND',p:[1,1,1,1]},
+  {name:'แมงกานีส (Mn)',std:'≤0.3 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'ทองแดง (Cu)',std:'≤1 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'สังกะสี (Zn)',std:'≤3 mg/L',r1b:'0.012',r1a:'0.070',r2b:'0.057',r2a:'0.041',p:[1,1,1,1]},
+  {name:'ตะกั่ว (Pb)',std:'≤0.01 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'โครเมียม (Cr)',std:'≤0.05 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'แคดเมียม (Cd)',std:'≤0.003 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'สารหนู (As)',std:'≤0.01 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
+  {name:'ปรอท (Hg)',std:'≤0.001 mg/L',r1b:'ND',r1a:'ND',r2b:'ND',r2a:'ND',p:[1,1,1,1]},
   {name:'Coliforms',std:'<1.1 MPN',r1b:'<1.1',r1a:'<1.1',r2b:'<1.1',r2a:'<1.1',p:[1,1,1,1]},
   {name:'E.coli',std:'<1.1 MPN',r1b:'<1.1',r1a:'<1.1',r2b:'<1.1',r2a:'<1.1',p:[1,1,1,1]}
 ];
-
-let ht68='<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:12px">';
-ht68+='<tr style="font-weight:700;color:var(--t2)"><td style="padding:8px 10px;border-radius:8px;background:var(--bg2);min-width:140px">พารามิเตอร์</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center;min-width:80px">มาตรฐาน</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 ก่อนเข้าระบบ<br><small>กรมอนามัย 20 มี.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 หลังเข้าระบบ<br><small>(OPD) 20 มี.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 2 ก่อนเข้าระบบ<br><small>ศอ.2 พิษณุโลก 26 ส.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 2 หลังเข้าระบบ<br><small>(IPD) 26 ส.ค. 68</small></td></tr>';
-params68.forEach(r=>{
+var ht68='<table style="width:100%;border-collapse:separate;border-spacing:3px;font-size:12px">';
+ht68+='<tr style="font-weight:700;color:var(--t2)"><td style="padding:8px 10px;border-radius:8px;background:var(--bg2);min-width:140px">พารามิเตอร์</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center;min-width:80px">มาตรฐาน</td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 ก่อนเข้าระบบ<br><small>3 มี.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 1 หลังเข้าระบบ<br><small>(OPD) 3 มี.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 2 ก่อนเข้าระบบ<br><small>4 ส.ค. 68</small></td><td style="padding:8px;border-radius:8px;background:var(--bg2);text-align:center">รอบ 2 หลังเข้าระบบ<br><small>(IPD) 4 ส.ค. 68</small></td></tr>';
+params68.forEach(function(r){
   ht68+='<tr><td style="padding:6px 10px;font-weight:600;color:var(--t1);border-radius:6px;background:var(--card)">'+r.name+'</td><td style="padding:6px;text-align:center;color:var(--t3);border-radius:6px;background:var(--card);font-size:10.5px">'+r.std+'</td>';
-  [r.r1b,r.r1a,r.r2b,r.r2a].forEach((v,i)=>{
-    const pass=r.p[i];const bg=pass?'rgba(22,163,74,.12)':'rgba(239,68,68,.15)';const cl=pass?'#16a34a':'#ef4444';const icon=pass?'✅':'❌';
-    ht68+='<td style="padding:6px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-weight:600">'+icon+' '+v+'</td>';
+  [r.r1b,r.r1a,r.r2b,r.r2a].forEach(function(v,i){
+    var pass=r.p[i];var bg=pass?'rgba(22,163,74,.12)':'rgba(239,68,68,.15)';var cl=pass?'#16a34a':'#ef4444';var ic=pass?'✅':'❌';
+    ht68+='<td style="padding:6px;text-align:center;border-radius:6px;background:'+bg+';color:'+cl+';font-weight:600">'+ic+' '+v+'</td>';
   });
   ht68+='</tr>';
 });
 ht68+='<tr style="font-weight:700"><td style="padding:8px 10px;border-radius:6px;background:var(--bg2);color:var(--t1)">รวมผ่าน</td><td></td>';
-[21,21,21,21].forEach(n=>{ht68+='<td style="padding:8px;text-align:center;border-radius:6px;background:rgba(22,163,74,.2);color:#16a34a;font-size:13px">✅ 21/21</td>'});
+[21,21,21,21].forEach(function(n){ht68+='<td style="padding:8px;text-align:center;border-radius:6px;background:rgba(22,163,74,.2);color:#16a34a;font-size:13px">✅ 21/21</td>'});
 ht68+='</tr></table>';
-document.getElementById('tapTable68').innerHTML=ht68;
+var el68=document.getElementById('tapTable68');if(el68)el68.innerHTML=ht68;
+}catch(e){console.warn('tapTable68:',e)}
 
-setTimeout(()=>runCountUp(document.getElementById('tap-content')),100);
+setTimeout(function(){try{runCountUp(document.getElementById('tap-content'))}catch(e){}},100);
+setTimeout(function(){try{resizeChartsIn(document.getElementById('page-tap'))}catch(e){}},900);
+rTap=true;
 }
 
 function exportWord(pageId){
