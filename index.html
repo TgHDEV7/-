@@ -1922,21 +1922,54 @@ Chart.defaults.plugins.legend.labels.pointStyle='circle';
 Chart.defaults.animation={duration:800,easing:'easeOutQuart'};
 Chart.defaults.transitions={active:{animation:{duration:200}},resize:{animation:{duration:0}}};
 
+const P={tl:'#0f766e',t2:'#14b8a6',bl:'#0284c7',b2:'#38bdf8',rd:'#dc2626',r2:'#f87171',pu:'#7c3aed',p2:'#a78bfa',gn:'#16a34a',g2:'#4ade80',or:'#d97706',o2:'#fbbf24',pk:'#db2777',cy:'#0891b2',c2:'#22d3ee',gr:'#94a3b8',gl:'#e2e8f0'};
+const isDk=()=>document.documentElement.getAttribute('data-theme')==='dark';
+const bdr=()=>isDk()?'rgba(255,255,255,.08)':'#fff';
+
+/* ═══ BAR DATALABELS PLUGIN (global) ═══ */
+const barLabelsPlugin={
+  id:'barDataLabels',
+  afterDatasetsDraw(chart){
+    if(chart.config.type!=='bar')return;
+    const ctx=chart.ctx;
+    const isHoriz=chart.options.indexAxis==='y';
+    ctx.save();
+    chart.data.datasets.forEach((ds,di)=>{
+      if(ds.type==='line')return;
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden)return;
+      meta.data.forEach((bar,i)=>{
+        const v=ds.data[i];
+        if(v==null||v===undefined)return;
+        const txt=typeof v==='number'?(v%1!==0?v.toFixed(1):String(v)):String(v);
+        ctx.fillStyle=isDk()?'rgba(255,255,255,.78)':'rgba(0,0,0,.6)';
+        ctx.font='bold 10.5px Sarabun,Kanit,sans-serif';
+        if(isHoriz){
+          ctx.textAlign='left';ctx.textBaseline='middle';
+          ctx.fillText(txt,bar.x+5,bar.y);
+        }else{
+          ctx.textAlign='center';ctx.textBaseline='bottom';
+          const y=bar.y-4;
+          ctx.fillText(txt,bar.x,y<6?bar.y+14:y);
+        }
+      });
+    });
+    ctx.restore();
+  }
+};
+Chart.register(barLabelsPlugin);
+
 const animBar={animation:{duration:800,easing:'easeOutQuart'}};
 const animDoughnut={animation:{animateRotate:true,animateScale:true,duration:900,easing:'easeOutCirc'}};
 const animLine={animation:{duration:1000,easing:'easeOutQuart'}};
 const animPolar={animation:{animateRotate:true,animateScale:true,duration:1000,easing:'easeOutCirc'}};
-
-const P={tl:'#0f766e',t2:'#14b8a6',bl:'#0284c7',b2:'#38bdf8',rd:'#dc2626',r2:'#f87171',pu:'#7c3aed',p2:'#a78bfa',gn:'#16a34a',g2:'#4ade80',or:'#d97706',o2:'#fbbf24',pk:'#db2777',cy:'#0891b2',c2:'#22d3ee',gr:'#94a3b8',gl:'#e2e8f0'};
-const isDk=()=>document.documentElement.getAttribute('data-theme')==='dark';
-const bdr=()=>isDk()?'rgba(255,255,255,.08)':'#fff';
 
 function dn(id,l,d,c,co){
   return safeChart(id,{type:'doughnut',data:{labels:l,datasets:[{data:d,backgroundColor:c,borderWidth:2,borderColor:bdr(),hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:co||'62%',plugins:{legend:{position:'bottom',labels:{font:{size:10}}}},...animDoughnut}});
 }
 function br(id,l,d,c,mx,u){
   const cc=CC();
-  return safeChart(id,{type:'bar',data:{labels:l,datasets:[{data:d,backgroundColor:c,borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+(u||'')}}},scales:{y:{beginAtZero:true,max:mx,grid:{color:cc.g},ticks:{callback:v=>v+(u||''),color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}},...animBar}});
+  return safeChart(id,{type:'bar',data:{labels:l,datasets:[{data:d,backgroundColor:c,borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+(u||'')}}},scales:{y:{beginAtZero:true,max:mx,grid:{color:cc.g},ticks:{callback:v=>v+(u||''),color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:11}}}},...animBar}});
 }
 
 /* ═══ WINDOW RESIZE ═══ */
@@ -1987,9 +2020,9 @@ dn('me68',['ไม่เคย 86%','เคย 14%'],[86,14],[P.gn,P.bl],'58%');
 br('as68',['เกินอ้างอิง','ปกติ'],[4,146],[P.rd,P.gn],160,' คน');
 dn('ia68',['เกิน 3 (75%)','ปกติ 1 (25%)'],[3,1],[P.rd,P.gn]);
 
-safeChart('cp1',{type:'bar',data:{labels:['ปี 2567','ปี 2568'],datasets:[{data:[11,4],backgroundColor:[P.b2,P.t2],borderRadius:9,borderSkipped:false,barThickness:52}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:14,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
-safeChart('cp2',{type:'bar',data:{labels:['ปี 2567','ปี 2568'],datasets:[{data:[7,3],backgroundColor:[P.b2,P.t2],borderRadius:9,borderSkipped:false,barThickness:52}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:10,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
-safeChart('cp3',{type:'bar',data:{labels:['สูบ ปี67','สูบ ปี68','ไม่สูบ ปี67','ไม่สูบ ปี68'],datasets:[{label:'เกินอ้างอิง',data:[5,6,67,33],backgroundColor:[P.rd,P.or,P.bl,P.cy],borderRadius:9,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:80,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('cp1',{type:'bar',data:{labels:['ปี 2567','ปี 2568'],datasets:[{data:[11,4],backgroundColor:[P.b2,P.t2],borderRadius:9,borderSkipped:false,barThickness:52}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:14,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('cp2',{type:'bar',data:{labels:['ปี 2567','ปี 2568'],datasets:[{data:[7,3],backgroundColor:[P.b2,P.t2],borderRadius:9,borderSkipped:false,barThickness:52}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:10,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('cp3',{type:'bar',data:{labels:['สูบ ปี67','สูบ ปี68','ไม่สูบ ปี67','ไม่สูบ ปี68'],datasets:[{label:'เกินอ้างอิง',data:[5,6,67,33],backgroundColor:[P.rd,P.or,P.bl,P.cy],borderRadius:9,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.parsed.y+' คน'}}},scales:{y:{beginAtZero:true,max:80,grid:{color:cc.g},ticks:{callback:v=>v+' คน',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
 setTimeout(()=>runCountUp(document.getElementById('y68')),100);
 // New demographic charts for 2568
 dn('ind68',['เคย 23%','ไม่เคย 77%'],[23,77],[P.bl,P.or],'58%');
@@ -2011,9 +2044,9 @@ let rW=false;let rW68=false;let rWs=false;
 function renderWater(){if(rW)return;
 const cc=getChartColors();
 // Overall pass/fail grouped bar
-safeChart('wOvr',{type:'bar',data:{labels:['รอบ 1 ส.ค. 67\n(N=42)','รอบ 2 พ.ย. 67\n(N=41)'],datasets:[{label:'ผ่านเกณฑ์',data:[6,9],backgroundColor:P.gn,borderRadius:8,borderSkipped:false},{label:'ไม่ผ่านเกณฑ์',data:[36,32],backgroundColor:P.rd,borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+' แห่ง'}}},scales:{y:{beginAtZero:true,max:45,grid:{color:cc.g},ticks:{callback:v=>v+' แห่ง',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('wOvr',{type:'bar',data:{labels:['รอบ 1 ส.ค. 67\n(N=42)','รอบ 2 พ.ย. 67\n(N=41)'],datasets:[{label:'ผ่านเกณฑ์',data:[6,9],backgroundColor:P.gn,borderRadius:8,borderSkipped:false},{label:'ไม่ผ่านเกณฑ์',data:[36,32],backgroundColor:P.rd,borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+' แห่ง'}}},scales:{y:{beginAtZero:true,max:45,grid:{color:cc.g},ticks:{callback:v=>v+' แห่ง',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
 // Pass rate by dimension
-safeChart('wByDim',{type:'bar',data:{labels:['กายภาพ','เคมี','ชีวภาพ'],datasets:[{label:'รอบ 1 (%ผ่าน)',data:[66.7,45.2,21.4],backgroundColor:'rgba(2,132,199,.7)',borderRadius:8,borderSkipped:false},{label:'รอบ 2 (%ผ่าน)',data:[75.6,61.0,31.7],backgroundColor:'rgba(22,163,74,.7)',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+'%'}}},scales:{y:{beginAtZero:true,max:100,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('wByDim',{type:'bar',data:{labels:['กายภาพ','เคมี','ชีวภาพ'],datasets:[{label:'รอบ 1 (%ผ่าน)',data:[66.7,45.2,21.4],backgroundColor:'rgba(2,132,199,.7)',borderRadius:8,borderSkipped:false},{label:'รอบ 2 (%ผ่าน)',data:[75.6,61.0,31.7],backgroundColor:'rgba(22,163,74,.7)',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+'%'}}},scales:{y:{beginAtZero:true,max:100,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
 // Physical
 br('wPhy',['ผ่าน (ร.1)','ไม่ผ่าน (ร.1)','ผ่าน (ร.2)','ไม่ผ่าน (ร.2)'],[28,14,31,10],[P.gn,P.rd,P.g2,P.r2],40,' แห่ง');
 // Chemical
@@ -2033,9 +2066,9 @@ rW=true;
 function renderWater68(){if(rW68)return;
 const cc=getChartColors();
 
-safeChart('w68Ovr',{type:'bar',data:{labels:['รอบ 1 เม.ย. 68\n(N=36)','รอบ 2 ต.ค. 68\n(N=34)'],datasets:[{label:'ผ่านเกณฑ์',data:[6,6],backgroundColor:P.gn,borderRadius:8,borderSkipped:false},{label:'ไม่ผ่านเกณฑ์',data:[30,28],backgroundColor:P.rd,borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+' แห่ง'}}},scales:{y:{beginAtZero:true,max:35,grid:{color:cc.g},ticks:{callback:v=>v+' แห่ง',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('w68Ovr',{type:'bar',data:{labels:['รอบ 1 เม.ย. 68\n(N=36)','รอบ 2 ต.ค. 68\n(N=34)'],datasets:[{label:'ผ่านเกณฑ์',data:[6,6],backgroundColor:P.gn,borderRadius:8,borderSkipped:false},{label:'ไม่ผ่านเกณฑ์',data:[30,28],backgroundColor:P.rd,borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+' แห่ง'}}},scales:{y:{beginAtZero:true,max:35,grid:{color:cc.g},ticks:{callback:v=>v+' แห่ง',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
 
-safeChart('w68ByDim',{type:'bar',data:{labels:['กายภาพ','เคมี','ชีวภาพ'],datasets:[{label:'รอบ 1 (%ผ่าน)',data:[80.6,75.0,25.0],backgroundColor:'rgba(2,132,199,.7)',borderRadius:8,borderSkipped:false},{label:'รอบ 2 (%ผ่าน)',data:[73.5,79.4,29.4],backgroundColor:'rgba(22,163,74,.7)',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+'%'}}},scales:{y:{beginAtZero:true,max:100,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
+safeChart('w68ByDim',{type:'bar',data:{labels:['กายภาพ','เคมี','ชีวภาพ'],datasets:[{label:'รอบ 1 (%ผ่าน)',data:[80.6,75.0,25.0],backgroundColor:'rgba(2,132,199,.7)',borderRadius:8,borderSkipped:false},{label:'รอบ 2 (%ผ่าน)',data:[73.5,79.4,29.4],backgroundColor:'rgba(22,163,74,.7)',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:x=>x.dataset.label+': '+x.parsed.y+'%'}}},scales:{y:{beginAtZero:true,max:100,grid:{color:cc.g},ticks:{callback:v=>v+'%',color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t}}}}});
 
 br('w68Phy',['ผ่าน (ร.1)','ไม่ผ่าน (ร.1)','ผ่าน (ร.2)','ไม่ผ่าน (ร.2)'],[29,7,25,9],[P.gn,P.rd,P.g2,P.r2],35,' แห่ง');
 
@@ -2160,11 +2193,11 @@ function renderTap(){if(rTap)return;
 var cc=getChartColors();
 
 try{
-safeChart('tapOvr',{type:'bar',data:{labels:['รอบ 1/67\nก่อนเข้าระบบ','รอบ 1/67\nหลังเข้าระบบ','รอบ 2/67\nก่อนเข้าระบบ','รอบ 2/67\nหลังเข้าระบบ','รอบ 1/68\nก่อนเข้าระบบ','รอบ 1/68\nหลังเข้าระบบ','รอบ 2/68\nก่อนเข้าระบบ','รอบ 2/68\nหลังเข้าระบบ'],datasets:[{label:'ผ่านเกณฑ์',data:[21,21,19,21,21,21,21,21],backgroundColor:['#16a34a','#16a34a','#ef4444','#16a34a','#16a34a','#16a34a','#16a34a','#16a34a'],borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.x+'/21 พารามิเตอร์'+(x.parsed.x<21?' ❌':' ✅')}}}},scales:{x:{beginAtZero:true,max:21,grid:{color:cc.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},y:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+safeChart('tapOvr',{type:'bar',data:{labels:['รอบ 1/67\nก่อนเข้าระบบ','รอบ 1/67\nหลังเข้าระบบ','รอบ 2/67\nก่อนเข้าระบบ','รอบ 2/67\nหลังเข้าระบบ','รอบ 1/68\nก่อนเข้าระบบ','รอบ 1/68\nหลังเข้าระบบ','รอบ 2/68\nก่อนเข้าระบบ','รอบ 2/68\nหลังเข้าระบบ'],datasets:[{label:'ผ่านเกณฑ์',data:[21,21,19,21,21,21,21,21],backgroundColor:['#16a34a','#16a34a','#ef4444','#16a34a','#16a34a','#16a34a','#16a34a','#16a34a'],borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{right:18}},indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.x+'/21 พารามิเตอร์'+(x.parsed.x<21?' ❌':' ✅')}}}},scales:{x:{beginAtZero:true,max:21,grid:{color:cc.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},y:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
 }catch(e){console.warn('tapOvr:',e)}
 
 try{
-safeChart('tapDim',{type:'bar',data:{labels:['กายภาพ\n(สี ขุ่น pH)','เคมี\n(TDS,Hardness ฯ)','โลหะหนัก\n(9 ตัว)','ชีวภาพ\n(Coliform,E.coli)'],datasets:[{label:'% ผ่านเกณฑ์',data:[100,100,100,87.5],backgroundColor:[P.gn,P.bl,P.pu,'rgba(245,158,11,.7)'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.y+'%'}}}},scales:{y:{beginAtZero:true,max:110,grid:{color:cc.g},ticks:{callback:function(v){return v+'%'},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
+safeChart('tapDim',{type:'bar',data:{labels:['กายภาพ\n(สี ขุ่น pH)','เคมี\n(TDS,Hardness ฯ)','โลหะหนัก\n(9 ตัว)','ชีวภาพ\n(Coliform,E.coli)'],datasets:[{label:'% ผ่านเกณฑ์',data:[100,100,100,87.5],backgroundColor:[P.gn,P.bl,P.pu,'rgba(245,158,11,.7)'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.y+'%'}}}},scales:{y:{beginAtZero:true,max:110,grid:{color:cc.g},ticks:{callback:function(v){return v+'%'},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc.t,font:{size:10}}}}}});
 }catch(e){console.warn('tapDim:',e)}
 
 try{
@@ -2175,15 +2208,15 @@ safeChart('tapTimeline',{type:'line',data:{labels:['รอบ 1/67\n(ม.ค.67)
 setTimeout(function(){
   var cc2=getChartColors();
   try{
-  safeChart('tapTDS',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'TDS (mg/L)',data:[98,100,224.6,224.6,104,114,120,154],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.bl,P.b2,P.bl,P.b2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤500',data:[500,500,500,500,500,500,500,500],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:550,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  safeChart('tapTDS',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'TDS (mg/L)',data:[98,100,224.6,224.6,104,114,120,154],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.bl,P.b2,P.bl,P.b2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤500',data:[500,500,500,500,500,500,500,500],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:550,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
   }catch(e){console.warn('tapTDS:',e)}
 
   try{
-  safeChart('tapHard',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'Hardness (mg/L CaCO₃)',data:[78,78,61.1,29.2,68.6,5.7,64.4,36.2],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.or,P.o2,P.or,P.o2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤300',data:[300,300,300,300,300,300,300,300],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:350,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  safeChart('tapHard',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'Hardness (mg/L CaCO₃)',data:[78,78,61.1,29.2,68.6,5.7,64.4,36.2],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.or,P.o2,P.or,P.o2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ ≤300',data:[300,300,300,300,300,300,300,300],type:'line',borderColor:'#facc15',borderDash:[6,4],borderWidth:2,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.parsed.y+' mg/L'}}}},scales:{y:{beginAtZero:true,max:350,grid:{color:cc2.g},ticks:{callback:function(v){return v},color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
   }catch(e){console.warn('tapHard:',e)}
 
   try{
-  safeChart('tapPH',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'pH',data:[8.1,7.9,7.8,6.5,8.0,7.8,7.92,7.78],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.cy,P.c2,P.cy,P.c2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ต่ำ (6.5)',data:[6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false},{label:'เกณฑ์สูง (8.5)',data:[8.5,8.5,8.5,8.5,8.5,8.5,8.5,8.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){if(x.datasetIndex===0)return 'pH: '+x.parsed.y;return x.dataset.label}}}},scales:{y:{min:5.5,max:9.5,grid:{color:cc2.g},ticks:{color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
+  safeChart('tapPH',{type:'bar',data:{labels:['รอบ1/67\nก่อน','รอบ1/67\nหลัง','รอบ2/67\nก่อน','รอบ2/67\nหลัง','รอบ1/68\nก่อน','รอบ1/68\nหลัง','รอบ2/68\nก่อน','รอบ2/68\nหลัง'],datasets:[{label:'pH',data:[8.1,7.9,7.8,6.5,8.0,7.8,7.92,7.78],backgroundColor:['#7c3aed','#a78bfa','#7c3aed','#a78bfa',P.cy,P.c2,P.cy,P.c2],borderRadius:6,borderSkipped:false},{label:'เกณฑ์ต่ำ (6.5)',data:[6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false},{label:'เกณฑ์สูง (8.5)',data:[8.5,8.5,8.5,8.5,8.5,8.5,8.5,8.5],type:'line',borderColor:'rgba(239,68,68,.5)',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},plugins:{legend:{position:'top',labels:{font:{size:10},filter:function(item){return item.datasetIndex===0}}},tooltip:{callbacks:{label:function(x){if(x.datasetIndex===0)return 'pH: '+x.parsed.y;return x.dataset.label}}}},scales:{y:{min:5.5,max:9.5,grid:{color:cc2.g},ticks:{color:'#94a3b8'}},x:{grid:{display:false},ticks:{color:cc2.t,font:{size:9}}}}}});
   }catch(e){console.warn('tapPH:',e)}
 
   try{
