@@ -2792,50 +2792,19 @@ function trParse(){
   ];
   function matchPt(s){
     var low=s.toLowerCase().replace(/\s+/g,' ');
-    // Try longer keys first for accuracy
     for(var i=0;i<ptMap.length;i++){
       var keys=ptMap[i].keys.slice().sort(function(a,b){return b.length-a.length});
       for(var j=0;j<keys.length;j++){
         var k=keys[j].toLowerCase();
-        // Short English keys (2-4 chars) → word boundary match
         if(k.length<=4&&/^[a-z]+$/.test(k)){
           var rx=new RegExp('(?:^|[^a-z])'+k+'(?:$|[^a-z])','i');
           if(rx.test(low))return ptMap[i].name;
-        }else{
-          if(low.indexOf(k)!==-1)return ptMap[i].name;
-        }
-      }
-    }
+        }else{if(low.indexOf(k)!==-1)return ptMap[i].name}
+      }}
     return null;
   }
 
-  // ═══ WEIGHT PARSER ═══
-  function parseKg(s){
-    var kg=0,found=false;
-    // Remove commas in numbers (1,250 → 1250)
-    var c=s.replace(/,/g,'');
-    // Pattern: Xกก. / X กิโลกรัม / Xโล / Xกิโล
-    var m1=c.match(/(\d+\.?\d*)\s*(?:กก\.?|กิโลกรัม|กิโล\w*|โล\w*)/i);
-    if(m1){kg+=parseFloat(m1[1]);found=true}
-    // Pattern: Xขีด
-    var m2=c.match(/(\d+\.?\d*)\s*ขีด/i);
-    if(m2){kg+=parseFloat(m2[1])*0.1;found=true}
-    // Pattern: Xกรัม (not กิโลกรัม)
-    if(!found){
-      var m4=c.match(/(\d+\.?\d*)\s*กรัม/i);
-      if(m4&&c.indexOf('กิโลกรัม')===-1){kg+=parseFloat(m4[1])/1000;found=true}
-    }
-    if(found)return kg;
-    // Fallback: line is mostly just a number (short line, no point name)
-    var stripped=c.replace(/[^\d\.]/g,'');
-    if(stripped&&c.trim().length<20){
-      var val=parseFloat(stripped);
-      if(val>0&&val<9999)return val;
-    }
-    return 0;
-  }
-
-  // ═══ DATE PARSER ═══
+  // ═══ DATE DETECTOR ═══
   function parseDate(s){
     var m=s.match(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})\s*[\/\-]\s*(\d{2,4})/);
     if(!m)return null;
@@ -2843,12 +2812,45 @@ function trParse(){
     if(y>2500)y=y%100;
     return{day:d,month:mo,yr:y,str:String(d).padStart(2,'0')+'/'+String(mo).padStart(2,'0')+'/'+String(y).padStart(2,'0')};
   }
+  function isDateOnly(s){
+    // Line is ONLY a date (e.g. "01/4/69", "02-4-69")
+    return/^\s*\d{1,2}\s*[\/\-]\s*\d{1,2}\s*[\/\-]\s*\d{2,4}\s*$/.test(s);
+  }
+
+  // ═══ WEIGHT PARSER (strict — no fallback on date-like strings) ═══
+  function parseKg(s){
+    var kg=0,found=false;
+    var c=s.replace(/,/g,'');
+    // Must have a Thai weight unit keyword
+    var m1=c.match(/(\d+\.?\d*)\s*(?:กก\.?|กิโลกรัม|กิโล\w*|โล\w*)/i);
+    if(m1){kg+=parseFloat(m1[1]);found=true}
+    var m2=c.match(/(\d+\.?\d*)\s*ขีด/i);
+    if(m2){kg+=parseFloat(m2[1])*0.1;found=true}
+    if(!found){
+      var m4=c.match(/(\d+\.?\d*)\s*กรัม/i);
+      if(m4&&c.indexOf('กิโลกรัม')===-1){kg+=parseFloat(m4[1])/1000;found=true}
+    }
+    if(found)return kg;
+    return 0;
+  }
+  // Loose weight: for standalone number lines like "1 กก." or just "4"
+  function parseKgLoose(s){
+    var strict=parseKg(s);
+    if(strict>0)return strict;
+    // Only if line is very short and is just a number
+    var c=s.replace(/,/g,'').replace(/[^\d\.]/g,'').trim();
+    if(c&&s.trim().length<10&&!isDateOnly(s)){
+      var v=parseFloat(c);
+      if(v>0&&v<500)return v;
+    }
+    return 0;
+  }
 
   // ═══ CLEAN LINE ═══
-  function cleanLine(l){
+  function clean(l){
     return l
-      .replace(/^\[?\d{1,2}[:.]\d{2}\]?\s*/,'')  // [12:34] timestamp
-      .replace(/^[\u0E00-\u0E7Fa-zA-Z\s\.]+[:：]\s*/,'') // sender name:
+      .replace(/^\[?\d{1,2}[:.]\d{2}\]?\s*/,'')
+      .replace(/^[\u0E00-\u0E7Fa-zA-Z\s\.]+[:：]\s*/,'')
       .replace(/^[\s\-–•·]+/,'')
       .replace(/ค่ะ|ครับ|จ้า|จร้า|คะ|นะคะ|ครัช|คับ|จ้ะ|น่ะ|นะ|ค่า|คร้า|จร้|จ๊ะ/g,'')
       .replace(/ขยะทั่วไป/g,'')
@@ -2857,72 +2859,72 @@ function trParse(){
       .trim();
   }
 
-  // ═══ TWO-PASS PARSE ═══
-  var rawLines=text.split(/\n/).map(function(l){return l.trim()}).filter(function(l){return l.length>0});
-  
-  // Pass 1: Extract date, point, weight per line
-  var parsed=rawLines.map(function(raw){
-    var clean=cleanLine(raw);
-    return{raw:raw,clean:clean,date:parseDate(raw),point:matchPt(clean),kg:parseKg(clean)};
-  });
-
-  // Pass 2: Connect across lines
-  // If line has point but no weight → look at NEXT line for weight
-  // If line has weight but no point → attach to PREVIOUS point
-  var lastDate=null,lastPoint=null;
+  // ═══ MAIN PARSE: State Machine ═══
+  var lines=text.split(/\n/).map(function(l){return l.trim()}).filter(function(l){return l.length>0});
+  var lastDate=null;
+  var pendingPoint=null; // point waiting for weight
   var items=[];
-  var now=new Date(),defDate={day:now.getDate(),month:now.getMonth()+1,yr:(now.getFullYear()+543)%100};
+  var now=new Date();
+  var defDate={day:now.getDate(),month:now.getMonth()+1,yr:(now.getFullYear()+543)%100};
   defDate.str=String(defDate.day).padStart(2,'0')+'/'+String(defDate.month).padStart(2,'0')+'/'+String(defDate.yr).padStart(2,'0');
 
-  for(var i=0;i<parsed.length;i++){
-    var cur=parsed[i];
-    
-    // Update date
-    if(cur.date)lastDate=cur.date;
-    
-    // Case 1: Has both point + weight → complete record
-    if(cur.point&&cur.kg>0){
-      lastPoint=cur.point;
-      addItem(cur.point,cur.kg);
+  for(var i=0;i<lines.length;i++){
+    var raw=lines[i];
+    var cl=clean(raw);
+    var dt=parseDate(raw);
+    var pt=matchPt(cl);
+    var kg=parseKg(cl);
+
+    // Update date if found
+    if(dt)lastDate=dt;
+
+    // Skip date-only lines
+    if(isDateOnly(raw))continue;
+
+    // ─── Has BOTH point + weight → complete record ───
+    if(pt&&kg>0){
+      pendingPoint=pt;
+      addItem(pt,kg);
       continue;
     }
-    
-    // Case 2: Has point but NO weight → peek next line
-    if(cur.point&&cur.kg===0){
-      lastPoint=cur.point;
-      if(i+1<parsed.length){
-        var next=parsed[i+1];
-        var nextKg=parseKg(cleanLine(next.raw));
-        if(nextKg>0&&!next.point){
-          if(next.date)lastDate=next.date;
-          addItem(cur.point,nextKg);
-          i++; // skip next line (consumed)
-          continue;
-        }
+
+    // ─── Has point only → remember it, wait for weight ───
+    if(pt&&kg===0){
+      // If there was a previous pending point without weight, discard it
+      pendingPoint=pt;
+      continue;
+    }
+
+    // ─── Has weight only → attach to pending point ───
+    if(!pt&&kg>0&&pendingPoint){
+      addItem(pendingPoint,kg);
+      pendingPoint=null;
+      continue;
+    }
+
+    // ─── No explicit unit → try loose number for pending point ───
+    if(!pt&&kg===0&&pendingPoint){
+      var looseKg=parseKgLoose(cl);
+      if(looseKg>0){
+        addItem(pendingPoint,looseKg);
+        pendingPoint=null;
+        continue;
       }
-      continue; // point without weight, skip
-    }
-    
-    // Case 3: Has weight but NO point → use previous point
-    if(!cur.point&&cur.kg>0&&lastPoint){
-      addItem(lastPoint,cur.kg);
-      continue;
     }
   }
 
   function addItem(point,kg){
-    var useDate=lastDate||defDate;
+    var d=lastDate||defDate;
     items.push({
       id:String(Date.now())+String(Math.random()).slice(2,7),
       point:point,kg:Math.round(kg*100)/100,
-      day:useDate.day,month:useDate.month,year:2500+useDate.yr,
-      date:useDate.str,addedAt:new Date().toISOString()
+      day:d.day,month:d.month,year:2500+d.yr,
+      date:d.str,addedAt:new Date().toISOString()
     });
   }
 
-  // ═══ RESULT ═══
+  // ═══ CONFIRM ═══
   if(items.length){
-    // Show preview before adding
     var preview=items.map(function(r){return r.date+' | '+r.point+' | '+r.kg+' กก.'}).join('\n');
     if(confirm('พบ '+items.length+' รายการ:\n\n'+preview+'\n\nต้องการบันทึก?')){
       items.forEach(function(r){trData.push(r)});
