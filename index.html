@@ -266,9 +266,21 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 .main::before{content:'';position:fixed;top:0;left:280px;right:0;bottom:0;background:radial-gradient(ellipse at 20% 0%,hsla(var(--hue),40%,50%,.04),transparent 50%),radial-gradient(ellipse at 80% 100%,hsla(var(--hue),40%,50%,.03),transparent 50%);pointer-events:none;z-index:0;transition:background .4s}
 
 /* Page transitions */
-.page{display:none;position:relative;z-index:1;opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease}
-.page.show{display:block;opacity:1;transform:translateY(0)}
-.page.out{opacity:0;transform:translateY(-6px);transition:opacity .15s ease-in,transform .15s ease-in}
+.page{display:none;position:relative;z-index:1;opacity:0;transform:translate3d(0,12px,0);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1);will-change:opacity,transform;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.page.show{display:block;opacity:1;transform:translate3d(0,0,0)}
+.page.out{opacity:0;transform:translate3d(0,-8px,0);transition:opacity .18s ease-in,transform .18s ease-in}
+
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .5s cubic-bezier(.25,.46,.45,.94),transform .5s cubic-bezier(.25,.46,.45,.94);will-change:opacity,transform}
+.reveal.visible{opacity:1;transform:translate3d(0,0,0)}
+.reveal-d1{transition-delay:.07s}.reveal-d2{transition-delay:.14s}.reveal-d3{transition-delay:.21s}.reveal-d4{transition-delay:.28s}
+/* ═══ CARD MICRO-INTERACTIONS ═══ */
+.cc{transition:transform .28s cubic-bezier(.4,0,.2,1),box-shadow .28s,border-color .28s,background .4s}
+.cc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.tk-card,.tr-kpi,.tr-pt-card{transition:transform .25s cubic-bezier(.4,0,.2,1),box-shadow .25s,background .4s}
+.tk-card:hover,.tr-kpi:hover,.tr-pt-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.08)}
+/* ═══ BUTTON PRESS ═══ */
+.ybtn:active,.wybtn:active{transform:scale(.96);transition:transform .1s}
 
 /* ═══ TOPBAR ═══ */
 .topbar{position:sticky;top:0;z-index:50;background:var(--topbar-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:14px;transition:background .4s}
@@ -372,12 +384,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
 /* ═══ SCROLL REVEAL ═══ */
-.obs{opacity:0;transform:translateY(14px);will-change:opacity,transform;transition:opacity .45s cubic-bezier(.25,.46,.45,.94),transform .45s cubic-bezier(.25,.46,.45,.94)}
-.obs.visible{opacity:1;transform:translateY(0)}
-.obs-left{opacity:0;transform:translateX(-14px);will-change:opacity,transform;transition:opacity .45s cubic-bezier(.25,.46,.45,.94),transform .45s cubic-bezier(.25,.46,.45,.94)}
-.obs-left.visible{opacity:1;transform:translateX(0)}
-.obs-scale{opacity:0;transform:scale(.96);will-change:opacity,transform;transition:opacity .4s cubic-bezier(.25,.46,.45,.94),transform .4s cubic-bezier(.25,.46,.45,.94)}
-.obs-scale.visible{opacity:1;transform:scale(1)}
+.obs{opacity:0;transform:translate3d(0,18px,0);will-change:opacity,transform;transition:opacity .45s cubic-bezier(.25,.46,.45,.94),transform .45s cubic-bezier(.25,.46,.45,.94);-webkit-backface-visibility:hidden}
+.obs.visible{opacity:1;transform:translate3d(0,0,0)}
+.obs-left{opacity:0;transform:translate3d(-18px,0,0);will-change:opacity,transform;transition:opacity .45s cubic-bezier(.25,.46,.45,.94),transform .45s cubic-bezier(.25,.46,.45,.94);-webkit-backface-visibility:hidden}
+.obs-left.visible{opacity:1;transform:translate3d(0,0,0)}
+.obs-scale{opacity:0;transform:scale3d(.95,.95,1);will-change:opacity,transform;transition:opacity .4s cubic-bezier(.25,.46,.45,.94),transform .4s cubic-bezier(.25,.46,.45,.94);-webkit-backface-visibility:hidden}
+.obs-scale.visible{opacity:1;transform:scale3d(1,1,1)}
 /* Chart containers — opacity only, NO transform (protects Chart.js canvas sizing) */
 .obs-fade{opacity:0;will-change:opacity;transition:opacity .5s cubic-bezier(.25,.46,.45,.94)}
 .obs-fade.visible{opacity:1}
@@ -525,8 +537,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 /* ═══ TRASH PAGE ═══ */
 .tr-setup{margin-bottom:14px}
 .tr-setup summary{font-size:12px;font-weight:600;color:#0284c7;cursor:pointer;padding:10px 14px;background:rgba(2,132,199,.04);border:1px solid rgba(2,132,199,.1);border-radius:10px}
-.tr-input{background:linear-gradient(135deg,rgba(15,118,110,.04),rgba(14,116,144,.02));border:1px solid rgba(15,118,110,.12);border-radius:14px;padding:16px;margin-bottom:14px}
-.tr-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end}
+.tr-input{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.tr-form{display:grid;grid-template-columns:1fr 1.2fr .8fr auto;gap:8px;align-items:end}
 @media(max-width:700px){.tr-form{grid-template-columns:1fr 1fr}}
 .tr-st{padding:8px 12px;border-radius:8px;font-size:11.5px;margin-top:8px;display:none;line-height:1.5}
 .tr-st.show{display:block}
@@ -534,6 +546,24 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 .tr-st.error{background:rgba(220,38,38,.06);color:#991b1b;border:1px solid rgba(220,38,38,.12)}
 .tr-st.loading{background:rgba(14,165,233,.06);color:#075985;border:1px solid rgba(14,165,233,.12)}
 .tr-badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9.5px;font-weight:600;white-space:nowrap}
+/* KPI row */
+.tr-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:500px){.tr-kpi-row{grid-template-columns:1fr}}
+.tr-kpi{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);box-shadow:var(--sh)}
+.tr-kpi-ic{font-size:20px;flex-shrink:0}
+.tr-kpi-val{font-family:'Kanit';font-size:22px;font-weight:800;color:var(--t1);line-height:1.1}
+.tr-kpi-lb{font-size:10px;color:var(--t3);font-weight:600}
+/* Point grid */
+.tr-pt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.tr-pt-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.tr-pt-grid{grid-template-columns:1fr}}
+.tr-pt-card{border-radius:12px;padding:14px;border:1px solid var(--border);background:var(--card);box-shadow:var(--sh);position:relative;overflow:hidden}
+.tr-pt-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.tr-pt-name{font-family:'Kanit';font-size:13px;font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.tr-pt-val{font-family:'Kanit';font-size:24px;font-weight:800;line-height:1}
+.tr-pt-sub{font-size:10px;color:var(--t3);margin-top:2px}
+.tr-pt-bar{height:4px;border-radius:4px;background:rgba(0,0,0,.04);margin-top:8px;overflow:hidden}
+.tr-pt-fill{height:100%;border-radius:4px;transition:width .6s}
 
 /* ═══ TAP PAGE COMPACT LAYOUT ═══ */
 .tap-hero{border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0f766e,#0e7490);padding:28px 24px 22px;margin-bottom:14px}
@@ -1583,16 +1613,28 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
   </div>
 </details>
 
-<!-- Input: Manual Form -->
+<!-- Input: Professional Form -->
 <div class="tr-input">
-  <h3 style="font-family:'Kanit';font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px">📋 บันทึกข้อมูลขยะ</h3>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <h3 style="font-family:'Kanit';font-size:14px;font-weight:700;color:var(--accent);margin:0">📋 บันทึกข้อมูลขยะ</h3>
+    <details style="position:relative">
+      <summary style="font-size:10.5px;color:var(--accent);cursor:pointer;font-weight:600">📱 วาง LINE</summary>
+      <div style="position:absolute;right:0;top:24px;width:340px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:10">
+        <textarea id="trInput" style="width:100%;min-height:70px;border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px;resize:vertical" placeholder="วางข้อความจาก LINE..."></textarea>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="ybtn" id="trParseBtn" onclick="trParse()" style="padding:4px 12px;font-size:10.5px;flex:1">📱 อ่านข้อมูล</button>
+          <button class="ybtn" onclick="document.getElementById('trInput').value=''" style="padding:4px 12px;font-size:10.5px;background:transparent;color:var(--t3);border:1px solid var(--border)">ล้าง</button>
+        </div>
+      </div>
+    </details>
+  </div>
   <div class="tr-form">
     <div>
-      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">วันที่</div>
-      <input type="date" id="trDate" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Sarabun'">
+      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">📅 วันที่</div>
+      <input type="date" id="trDate" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Sarabun';background:var(--card)">
     </div>
     <div>
-      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">จุดเก็บ</div>
+      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">📍 จุดเก็บ</div>
       <select id="trPoint" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Sarabun';background:var(--card)">
         <option value="">— เลือกจุด —</option>
         <option>เวชปฏิบัติ</option>
@@ -1607,32 +1649,19 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
       </select>
     </div>
     <div>
-      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">น้ำหนัก (กก.)</div>
-      <input type="number" id="trKgInput" step="0.1" min="0" placeholder="เช่น 2.5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Sarabun'">
+      <div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:3px">⚖️ น้ำหนัก (กก.)</div>
+      <input type="number" id="trKgInput" step="0.1" min="0" placeholder="เช่น 2.5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Sarabun';background:var(--card)">
     </div>
-    <button class="ybtn" onclick="trAddManual()" style="padding:8px 18px;font-size:12px;white-space:nowrap">➕ เพิ่ม</button>
+    <button class="ybtn" onclick="trAddManual()" style="padding:8px 18px;font-size:12px;white-space:nowrap;border-radius:8px">➕ เพิ่ม</button>
   </div>
   <div class="tr-st" id="trStatus"></div>
-
-  <!-- AI Paste (secondary) -->
-  <details style="margin-top:10px">
-    <summary style="font-size:11px;color:var(--t3);cursor:pointer">📱 วางข้อความจาก LINE (อ่านอัตโนมัติ)</summary>
-    <div style="margin-top:8px">
-      <textarea id="trInput" style="width:100%;min-height:80px;border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;resize:vertical" placeholder="วางข้อความจาก LINE..."></textarea>
-      <div style="display:flex;gap:6px;margin-top:6px">
-        <button class="ybtn" id="trParseBtn" onclick="trParse()" style="padding:5px 14px;font-size:11px">📱 อ่านข้อมูล</button>
-        <button class="ybtn" onclick="document.getElementById('trInput').value=''" style="padding:5px 14px;font-size:11px;background:transparent;color:var(--t3);border:1px solid var(--border)">ล้าง</button>
-      </div>
-    </div>
-  </details>
 </div>
 
-<!-- KPI -->
-<div class="tap-kpi-strip" style="margin-bottom:14px">
-  <div class="tk-card"><div class="tk-ic" style="background:rgba(15,118,110,.1);color:#0f766e">📊</div><div><div class="tk-val" id="trKRec">0</div><div class="tk-lb">รายการ</div></div></div>
-  <div class="tk-card"><div class="tk-ic" style="background:rgba(100,116,139,.1);color:#475569">🗑️</div><div><div class="tk-val" id="trKKg">0</div><div class="tk-lb">กก. รวม</div></div></div>
-  <div class="tk-card"><div class="tk-ic" style="background:rgba(124,58,237,.1);color:#7c3aed">📍</div><div><div class="tk-val" id="trKPt">0</div><div class="tk-lb">จุดเก็บ</div></div></div>
-  <div class="tk-card"><div class="tk-ic" style="background:rgba(2,132,199,.1);color:#0284c7">📅</div><div><div class="tk-val" id="trKDay">0</div><div class="tk-lb">วัน</div></div></div>
+<!-- KPI — 3 cards only -->
+<div class="tr-kpi-row">
+  <div class="tr-kpi"><span class="tr-kpi-ic">🗑️</span><div><div class="tr-kpi-val" id="trKKg">0</div><div class="tr-kpi-lb">กก. รวม</div></div></div>
+  <div class="tr-kpi"><span class="tr-kpi-ic">📍</span><div><div class="tr-kpi-val" id="trKPt">0</div><div class="tr-kpi-lb">จุดเก็บ</div></div></div>
+  <div class="tr-kpi"><span class="tr-kpi-ic">📅</span><div><div class="tr-kpi-val" id="trKDay">0</div><div class="tr-kpi-lb">วัน</div></div></div>
 </div>
 
 <!-- Tabs -->
@@ -1708,7 +1737,6 @@ function safeChart(id,config){
   try{
     const el=document.getElementById(id);
     if(!el||el.tagName!=='CANVAS')return null;
-    // Destroy existing chart on same canvas to prevent reuse error
     const existing=Chart.getChart(el);
     if(existing)existing.destroy();
     return new Chart(el,config);
@@ -1719,6 +1747,25 @@ function resizeChartsIn(container){
   container.querySelectorAll('canvas').forEach(cv=>{
     try{const c=Chart.getChart(cv);if(c)c.resize();}catch(e){}
   });
+}
+/* Ensure all charts in a container are visible — retry if canvas=0 */
+function ensureCharts(container,renderFn,attempt){
+  if(!container)return;
+  attempt=attempt||0;
+  if(attempt>3)return;
+  var ok=true;
+  container.querySelectorAll('canvas').forEach(function(cv){
+    if(cv.clientWidth===0||cv.clientHeight===0)ok=false;
+  });
+  if(!ok&&renderFn){
+    setTimeout(function(){
+      renderFn();
+      resizeChartsIn(container);
+      ensureCharts(container,renderFn,attempt+1);
+    },300*(attempt+1));
+  }else{
+    resizeChartsIn(container);
+  }
 }
 
 /* ═══ THEME ═══ */
@@ -1772,33 +1819,39 @@ function goPage(id,el){
   try{history.replaceState(null,'','#'+id)}catch(e){}
   function activate(){
     next.classList.add('show');
-    // Force reflow so browser computes layout before chart rendering
-    void next.offsetHeight;
+    void next.offsetHeight; // force reflow
+
+    // Wait for CSS transition to complete, then render
     setTimeout(function(){
-      try{
-        runCountUp(next);
-        if(id==='home')renderHomeCharts();
-        else if(id==='mine'){
-          // Only render the currently visible tab
-          var minePanel67=document.getElementById('y67');
-          var minePanel68=document.getElementById('y68');
-          if(minePanel67&&minePanel67.classList.contains('sh')&&!r67)renderMine67();
-          if(minePanel68&&minePanel68.classList.contains('sh')&&!r68)render68();
-        }
-        else if(id==='water'){
-          var wPanel67=document.getElementById('w67');
-          var wPanel68=document.getElementById('w68');
-          if(wPanel67&&wPanel67.classList.contains('wsh')&&!rW)renderWater();
-          if(wPanel68&&wPanel68.classList.contains('wsh')&&!rW68)renderWater68();
-        }
-        else if(id==='waste'){if(!rWs)renderWaste();}
-        else if(id==='tap'){if(!rTap)renderTap();}
-        else if(id==='trash'){trLoadData()}
-        resizeChartsIn(next);
-      }catch(e){console.warn('Page render error:',e)}
-      // Safety resize after animations fully settle
-      setTimeout(function(){resizeChartsIn(next)},500);
-    },280);
+      // Use rAF to ensure browser has painted
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          try{
+            runCountUp(next);
+            if(id==='home'){renderHomeCharts();ensureCharts(next,renderHomeCharts)}
+            else if(id==='mine'){
+              var minePanel67=document.getElementById('y67');
+              var minePanel68=document.getElementById('y68');
+              if(minePanel67&&minePanel67.classList.contains('sh')&&!r67){renderMine67();ensureCharts(minePanel67,renderMine67)}
+              if(minePanel68&&minePanel68.classList.contains('sh')&&!r68){render68();ensureCharts(minePanel68,render68)}
+            }
+            else if(id==='water'){
+              var wPanel67=document.getElementById('w67');
+              var wPanel68=document.getElementById('w68');
+              if(wPanel67&&wPanel67.classList.contains('wsh')&&!rW){renderWater();ensureCharts(wPanel67,renderWater)}
+              if(wPanel68&&wPanel68.classList.contains('wsh')&&!rW68){renderWater68();ensureCharts(wPanel68,renderWater68)}
+            }
+            else if(id==='waste'){if(!rWs){renderWaste();ensureCharts(next,renderWaste)}}
+            else if(id==='tap'){if(!rTap){renderTap();ensureCharts(next,renderTap)}}
+            else if(id==='trash'){
+              if(!trData.length)trLoadData();
+              else{trRenderCharts();ensureCharts(document.getElementById('trash-content'),trRenderCharts)}
+            }
+            resizeChartsIn(next);
+          }catch(e){console.warn('Page render error:',e)}
+        });
+      });
+    },300);
     window.scrollTo({top:0});
   }
   if(cur){
@@ -1853,12 +1906,11 @@ function swY(y,btn){
   void panel.offsetHeight;
   setTimeout(function(){
     try{
-      if(y===67&&!r67)renderMine67();
-      if(y===68&&!r68)render68();
+      if(y===67&&!r67){renderMine67();ensureCharts(panel,renderMine67)}
+      if(y===68&&!r68){render68();ensureCharts(panel,render68)}
       runCountUp(panel);
       resizeChartsIn(panel);
     }catch(e){console.warn('swY error:',e)}
-    setTimeout(function(){resizeChartsIn(panel)},400);
   },300);
 }
 function swYW(y,btn){
@@ -1868,17 +1920,14 @@ function swYW(y,btn){
   document.querySelectorAll('#page-water .wybtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   try{history.replaceState(null,'','#water/'+y)}catch(e){}
-  // Force reflow so canvas gets real dimensions
   void panel.offsetHeight;
   setTimeout(function(){
     try{
-      if(y===67&&!rW)renderWater();
-      if(y===68&&!rW68)renderWater68();
+      if(y===67&&!rW){renderWater();ensureCharts(panel,renderWater)}
+      if(y===68&&!rW68){renderWater68();ensureCharts(panel,renderWater68)}
       runCountUp(panel);
       resizeChartsIn(panel);
     }catch(e){console.warn('swYW error:',e)}
-    // Safety resize after animations settle
-    setTimeout(function(){resizeChartsIn(panel)},400);
   },300);
 }
 function swYT(y,btn){
@@ -1891,11 +1940,10 @@ function swYT(y,btn){
   void panel.offsetHeight;
   setTimeout(function(){
     try{
-      if(!rTap)renderTap();
+      if(!rTap){renderTap();ensureCharts(panel,renderTap)}
       runCountUp(panel);
       resizeChartsIn(panel);
     }catch(e){console.warn('swYT error:',e)}
-    setTimeout(function(){resizeChartsIn(panel)},400);
   },300);
 }
 function togM(el){el.classList.toggle('open')}
@@ -2940,7 +2988,6 @@ function trParse(){
 function trShowSt(m,t){var e=document.getElementById('trStatus');e.className='tr-st show '+t;e.innerHTML=m;if(t==='success')setTimeout(function(){e.classList.remove('show')},4000)}
 function trUpdateAll(){trUpdateKPI();trRenderCharts();trRenderTbl();trRenderPt();trRenderDay();trRenderMon()}
 function trUpdateKPI(){
-  document.getElementById('trKRec').textContent=trData.length;
   document.getElementById('trKKg').textContent=trData.reduce(function(s,d){return s+(Number(d.kg)||0)},0).toLocaleString(undefined,{maximumFractionDigits:1});
   document.getElementById('trKPt').textContent=new Set(trData.map(function(d){return d.point})).size;
   document.getElementById('trKDay').textContent=new Set(trData.map(function(d){return d.date})).size;
@@ -2966,6 +3013,8 @@ function trRenderCharts(){
   var mons=Object.values(mm).sort(function(a,b){return(a.year*100+a.month)-(b.year*100+b.month)});
   trDc('trCTrend');
   trCharts.trCTrend=safeChart('trCTrend',{type:'line',data:{labels:mons.map(function(m){return(thM[m.month]||m.month)+' '+m.year%100}),datasets:[{data:mons.map(function(m){return Math.round(m.kg*10)/10}),borderColor:'#0f766e',backgroundColor:'rgba(15,118,110,.06)',fill:true,tension:.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#0f766e',pointBorderColor:bdr(),pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.y.toLocaleString()+' กก.'}}}},scales:{y:{beginAtZero:true,grid:{color:cc.g},ticks:{callback:function(v){return v+' กก.'}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
+  // Safety resize
+  setTimeout(function(){try{resizeChartsIn(document.getElementById('trash-content'))}catch(e){}},400);
 }
 
 function trRenderTbl(){
@@ -2983,10 +3032,18 @@ function trRenderPt(){
   if(!trData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3)">📍 ยังไม่มีข้อมูล</div>';return}
   var pm={};trData.forEach(function(d){var k=Number(d.kg)||0;if(!pm[d.point])pm[d.point]={kg:0,n:0};pm[d.point].kg+=k;pm[d.point].n++});
   var total=trData.reduce(function(s,d){return s+(Number(d.kg)||0)},0);
-  var h='<div class="cgr">';
+  var maxKg=Math.max.apply(null,Object.values(pm).map(function(v){return v.kg}));
+  var h='<div class="tr-pt-grid">';
   Object.entries(pm).sort(function(a,b){return b[1].kg-a[1].kg}).forEach(function(e){
     var name=e[0],data=e[1],pct=total>0?Math.round(data.kg/total*100):0,c=trPtColor(name);
-    h+='<div class="cc"><h3 style="color:'+c+'">📍 '+name+' <span style="font-size:11px;font-weight:500;color:var(--t3);margin-left:auto">'+pct+'%</span></h3><div style="display:flex;gap:10px"><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:'+c+'0a"><div style="font-family:Kanit;font-size:20px;font-weight:800;color:'+c+'">'+data.kg.toLocaleString(undefined,{maximumFractionDigits:1})+'</div><div style="font-size:9px;color:var(--t3)">กก.</div></div><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:rgba(0,0,0,.02)"><div style="font-family:Kanit;font-size:20px;font-weight:800;color:var(--t2)">'+data.n+'</div><div style="font-size:9px;color:var(--t3)">รายการ</div></div></div></div>'});
+    var barW=maxKg>0?Math.round(data.kg/maxKg*100):0;
+    h+='<div class="tr-pt-card" style="border-color:'+c+'15"><div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:'+c+';border-radius:4px 0 0 4px"></div>';
+    h+='<div class="tr-pt-name" style="color:'+c+'">'+name+'<span style="font-size:11px;font-weight:600;color:var(--t3)">'+pct+'%</span></div>';
+    h+='<div class="tr-pt-val" style="color:'+c+'">'+data.kg.toLocaleString(undefined,{maximumFractionDigits:1})+' <span style="font-size:12px;font-weight:500;color:var(--t3)">กก.</span></div>';
+    h+='<div class="tr-pt-sub">'+data.n+' รายการ</div>';
+    h+='<div class="tr-pt-bar"><div class="tr-pt-fill" style="width:'+barW+'%;background:'+c+'"></div></div>';
+    h+='</div>';
+  });
   el.innerHTML=h+'</div>';
 }
 
@@ -3020,7 +3077,7 @@ function trRenderMon(){
   el.innerHTML=h;
 }
 
-function trSw(v,tab){['overview','bypoint','daily','monthly','table'].forEach(function(x){document.getElementById('tr-'+x).style.display=x===v?'':'none'});tab.closest('.ybar').querySelectorAll('.wybtn').forEach(function(t){t.classList.remove('active')});tab.classList.add('active');if(v==='overview')trRenderCharts()}
+function trSw(v,tab){['overview','bypoint','daily','monthly','table'].forEach(function(x){document.getElementById('tr-'+x).style.display=x===v?'':'none'});tab.closest('.ybar').querySelectorAll('.wybtn').forEach(function(t){t.classList.remove('active')});tab.classList.add('active');if(v==='overview'){setTimeout(function(){trRenderCharts();ensureCharts(document.getElementById('trash-content'),trRenderCharts)},100)}}
 function trDelR(id){if(!confirm('ลบ?'))return;trData=trData.filter(function(d){return d.id!==id});trURL=trGetUrl();if(trURL){fetch(trURL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',id:id})}).catch(function(){})}else{try{localStorage.setItem('tr-waste-data',JSON.stringify(trData))}catch(e){}}trUpdateAll()}
 function trClearAll(){if(!confirm('ล้างข้อมูลทั้งหมด?'))return;trData=[];trURL=trGetUrl();if(trURL){fetch(trURL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'clearAll'})}).catch(function(){})}else{try{localStorage.setItem('tr-waste-data',JSON.stringify([]))}catch(e){}}trUpdateAll()}
 function trExpCSV(){if(!trData.length)return;var c='วันที่,จุดเก็บ,น้ำหนัก(กก.)\n';trData.forEach(function(d){c+=d.date+','+d.point+','+d.kg+'\n'});var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv'}));a.download='waste_data.csv';a.click()}
@@ -3138,6 +3195,21 @@ function applyScrollReveal(page){
     el.style.transitionDelay=(i*80)+'ms';
     scrollObs.observe(el);
   });
+  // Trash page: point cards, KPIs, form
+  page.querySelectorAll('.tr-pt-card').forEach((el,i)=>{
+    el.classList.add('obs');
+    el.style.transitionDelay=(i*50)+'ms';
+    scrollObs.observe(el);
+  });
+  page.querySelectorAll('.tr-kpi').forEach((el,i)=>{
+    el.classList.add('obs');
+    el.style.transitionDelay=(i*60)+'ms';
+    scrollObs.observe(el);
+  });
+  page.querySelectorAll('.tr-input,.tr-setup').forEach(el=>{
+    el.classList.add('obs');
+    scrollObs.observe(el);
+  });
   // Timeline cards — Chart.js animates the charts
   page.querySelectorAll('.timeline-card').forEach(el=>{
     scrollObs.observe(el);
@@ -3183,6 +3255,7 @@ if(mainArea&&topbar){
 const origGoPage=goPage;
 goPage=function(id,el){
   origGoPage(id,el);
+  // Wait for activate() chart rendering to complete (300ms + rAF + render + buffer)
   setTimeout(()=>{
     const page=document.getElementById('page-'+id);
     if(page){
@@ -3195,12 +3268,20 @@ goPage=function(id,el){
         e.classList.remove('obs','obs-left','obs-scale','obs-fade');
       });
       applyScrollReveal(page);
-      // Resize all charts in the page to correct any dimension issues
-      page.querySelectorAll('canvas').forEach(cv=>{
-        const c=Chart.getChart(cv);if(c)c.resize();
+      // Resize all charts after they've been rendered
+      requestAnimationFrame(()=>{
+        page.querySelectorAll('canvas').forEach(cv=>{
+          try{const c=Chart.getChart(cv);if(c)c.resize()}catch(e){}
+        });
+        // Second pass after a beat for stubborn charts
+        setTimeout(()=>{
+          page.querySelectorAll('canvas').forEach(cv=>{
+            try{const c=Chart.getChart(cv);if(c&&(cv.clientWidth===0||cv.clientHeight===0))c.resize()}catch(e){}
+          });
+        },500);
       });
     }
-  },300);
+  },600);
 };
 
 // ── 5. Init scroll reveal on first visible page ──
@@ -3208,6 +3289,16 @@ setTimeout(()=>{
   const firstPage=document.querySelector('.page.show');
   if(firstPage)applyScrollReveal(firstPage);
 },500);
+
+// ── 6. Resize charts when browser tab becomes visible ──
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    setTimeout(function(){
+      var page=document.querySelector('.page.show');
+      if(page)resizeChartsIn(page);
+    },200);
+  }
+});
 
 </script>
 </body>
