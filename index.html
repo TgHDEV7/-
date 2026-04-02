@@ -522,6 +522,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 .sc5-pending:hover{opacity:.8}
 
 /* Timeline */
+/* ═══ TRASH PAGE ═══ */
+.tr-setup{margin-bottom:14px}
+.tr-setup summary{font-size:12px;font-weight:600;color:#0284c7;cursor:pointer;padding:10px 14px;background:rgba(2,132,199,.04);border:1px solid rgba(2,132,199,.1);border-radius:10px}
+.tr-input{background:linear-gradient(135deg,rgba(15,118,110,.04),rgba(14,116,144,.02));border:2px dashed rgba(15,118,110,.15);border-radius:14px;padding:16px;margin-bottom:14px}
+.tr-st{padding:8px 12px;border-radius:8px;font-size:11.5px;margin-top:8px;display:none;line-height:1.5}
+.tr-st.show{display:block}
+.tr-st.success{background:rgba(22,163,74,.06);color:#166534;border:1px solid rgba(22,163,74,.12)}
+.tr-st.error{background:rgba(220,38,38,.06);color:#991b1b;border:1px solid rgba(220,38,38,.12)}
+.tr-st.loading{background:rgba(14,165,233,.06);color:#075985;border:1px solid rgba(14,165,233,.12)}
+.tr-badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9.5px;font-weight:600;white-space:nowrap}
+
 /* ═══ TAP PAGE COMPACT LAYOUT ═══ */
 .tap-hero{border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0f766e,#0e7490);padding:28px 24px 22px;margin-bottom:14px}
 .tap-hero .hero-pat{position:absolute;inset:0;opacity:.15;background:repeating-linear-gradient(120deg,transparent,transparent 30px,rgba(255,255,255,.03) 30px,rgba(255,255,255,.03) 60px)}
@@ -635,6 +646,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
     <div class="nav-sub" id="sub-env">
       <a id="nav-waste" onclick="goPage('waste',this)">ผลบำบัดน้ำเสีย รพ.</a>
       <a id="nav-tap" onclick="goPage('tap',this)">ผลน้ำประปา รพ.</a>
+      <a id="nav-trash" onclick="goPage('trash',this)">ข้อมูลขยะทั่วไป</a>
     </div>
 
     <!-- งานอาชีวอนามัย — ShieldCheck -->
@@ -1551,6 +1563,78 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="credit">ข้อมูล: กองท้องปฏิบัติการสาธารณสุข กรมอนามัย & ศูนย์อนามัยที่ 2 พิษณุโลก | กลุ่มงานบริการด้านปฐมภูมิแบบองค์รวม โรงพยาบาลทับคล้อ</div>
 </div></div>
 
+<!-- ▓▓ TRASH (ขยะทั่วไป) ▓▓ -->
+<div class="page" id="page-trash">
+<div class="topbar"><span class="topicon">🗑️</span><h1>ข้อมูลขยะทั่วไป</h1></div>
+<div class="pg-pad" id="trash-content">
+
+<!-- Setup Google Sheets -->
+<details class="tr-setup">
+  <summary>⚙️ ตั้งค่าเชื่อมต่อ Google Sheets</summary>
+  <div style="margin-top:8px">
+    <div style="display:flex;gap:6px;align-items:center">
+      <input type="text" id="trSheetUrl" placeholder="วาง URL Apps Script" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px">
+      <button class="ybtn" style="padding:5px 12px;font-size:11px" onclick="trSaveUrl()">💾 บันทึก</button>
+      <button class="ybtn" style="padding:5px 12px;font-size:11px;background:transparent;color:var(--accent);border:1px solid var(--border)" onclick="trTestConn()">🔗 ทดสอบ</button>
+    </div>
+    <div class="tr-st" id="trSetupSt"></div>
+  </div>
+</details>
+
+<!-- Input -->
+<div class="tr-input">
+  <h3 style="font-family:'Kanit';font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px">📋 วางข้อความจาก LINE</h3>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:8px">ก็อปแชทมาวางได้เลย — ระบบจะอ่านจุดเก็บ วันที่ และน้ำหนัก (กก./ขีด/โล) ให้อัตโนมัติ</div>
+  <textarea id="trInput" style="width:100%;min-height:90px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12.5px;resize:vertical" placeholder="ตัวอย่าง:&#10;01/4/69 จุดเวชปฏิบัติ ขยะทั่วไป 1กก.&#10;ห้อง lab 4โล&#10;จุดกายภาพ 2กก.2ขีด"></textarea>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <button class="ybtn" id="trParseBtn" onclick="trParse()" style="padding:7px 16px;font-size:12px">🤖 อ่านข้อมูล</button>
+    <button class="ybtn" onclick="document.getElementById('trInput').value='';document.getElementById('trStatus').className='tr-st'" style="padding:7px 16px;font-size:12px;background:transparent;color:var(--t3);border:1px solid var(--border)">ล้าง</button>
+    <button class="ybtn" onclick="trLoadData()" style="padding:7px 16px;font-size:12px;background:transparent;color:var(--t3);border:1px solid var(--border)">🔄 รีเฟรช</button>
+  </div>
+  <div class="tr-st" id="trStatus"></div>
+</div>
+
+<!-- KPI -->
+<div class="tap-kpi-strip" style="margin-bottom:14px">
+  <div class="tk-card"><div class="tk-ic" style="background:rgba(15,118,110,.1);color:#0f766e">📊</div><div><div class="tk-val" id="trKRec">0</div><div class="tk-lb">รายการ</div></div></div>
+  <div class="tk-card"><div class="tk-ic" style="background:rgba(100,116,139,.1);color:#475569">🗑️</div><div><div class="tk-val" id="trKKg">0</div><div class="tk-lb">กก. รวม</div></div></div>
+  <div class="tk-card"><div class="tk-ic" style="background:rgba(124,58,237,.1);color:#7c3aed">📍</div><div><div class="tk-val" id="trKPt">0</div><div class="tk-lb">จุดเก็บ</div></div></div>
+  <div class="tk-card"><div class="tk-ic" style="background:rgba(2,132,199,.1);color:#0284c7">📅</div><div><div class="tk-val" id="trKDay">0</div><div class="tk-lb">วัน</div></div></div>
+</div>
+
+<!-- Tabs -->
+<div class="yw"><div class="ybar">
+  <button class="wybtn active" onclick="trSw('overview',this)">📊 ภาพรวม</button>
+  <button class="wybtn" onclick="trSw('bypoint',this)">📍 แยกจุด</button>
+  <button class="wybtn" onclick="trSw('daily',this)">📅 รายวัน</button>
+  <button class="wybtn" onclick="trSw('monthly',this)">📆 รายเดือน</button>
+  <button class="wybtn" onclick="trSw('table',this)">📋 ตาราง</button>
+</div></div>
+
+<div id="tr-overview">
+  <div class="cgr">
+    <div class="cc"><h3>📍 ขยะแยกจุดเก็บ (กก.)</h3><div class="cw" style="height:230px"><canvas id="trCBar"></canvas></div></div>
+    <div class="cc"><h3>🥧 สัดส่วนแยกจุด</h3><div class="cw" style="height:230px"><canvas id="trCPie"></canvas></div></div>
+  </div>
+  <div class="cc"><h3>📈 แนวโน้มรายเดือน</h3><div class="cw" style="height:220px"><canvas id="trCTrend"></canvas></div></div>
+</div>
+<div id="tr-bypoint" style="display:none"><div id="trPtCards"></div></div>
+<div id="tr-daily" style="display:none"><div id="trDayCards"></div></div>
+<div id="tr-monthly" style="display:none"><div id="trMonCards"></div></div>
+<div id="tr-table" style="display:none">
+  <div class="cc">
+    <h3>📋 ข้อมูลทั้งหมด</h3>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="ybtn" onclick="trClearAll()" style="padding:5px 12px;font-size:11px;background:#fee2e2;color:#dc2626;border:1px solid rgba(220,38,38,.15)">🗑️ ล้างทั้งหมด</button>
+      <button class="ybtn" onclick="trExpCSV()" style="padding:5px 12px;font-size:11px;background:transparent;color:var(--accent);border:1px solid var(--border)">📥 CSV</button>
+    </div>
+    <div style="overflow-x:auto" id="trTblData"></div>
+  </div>
+</div>
+
+<div class="credit">กลุ่มงานบริการด้านปฐมภูมิแบบองค์รวม โรงพยาบาลทับคล้อ</div>
+</div></div>
+
 <!-- ▓▓ OCC ▓▓ -->
 <div class="page" id="page-occ">
 <div class="topbar"><span class="topicon">🏭</span><h1>งานอาชีวอนามัย</h1></div>
@@ -1676,6 +1760,7 @@ function goPage(id,el){
         }
         else if(id==='waste'){if(!rWs)renderWaste();}
         else if(id==='tap'){if(!rTap)renderTap();}
+        else if(id==='trash'){trLoadData()}
         resizeChartsIn(next);
       }catch(e){console.warn('Page render error:',e)}
       // Safety resize after animations fully settle
@@ -1703,6 +1788,7 @@ function highlightNav(target){
     water:{navId:'nav-water',parentId:'nav-mine-parent',subId:'sub-mine'},
     waste:{navId:'nav-waste',parentId:'nav-env-parent',subId:'sub-env'},
     tap:{navId:'nav-tap',parentId:'nav-env-parent',subId:'sub-env'},
+    trash:{navId:'nav-trash',parentId:'nav-env-parent',subId:'sub-env'},
     occ:{navId:'nav-occ'},
     about:{navId:'nav-about'}
   };
@@ -1826,7 +1912,7 @@ function runCountUp(container){
   var parts=hash.split('/');
   var page=parts[0];
   var sub=parts[1]?parseInt(parts[1]):null;
-  var validPages=['home','mine','water','waste','tap','occ','about'];
+  var validPages=['home','mine','water','waste','tap','trash','occ','about'];
   if(validPages.indexOf(page)===-1){highlightNav('home');return;}
   if(page==='home'){highlightNav('home');return;}
   setTimeout(function(){
@@ -2624,6 +2710,157 @@ function exportWord(pageId){
     alert('เกิดข้อผิดพลาด: '+err.message);
   });
 }
+
+/* ═══ TRASH (ขยะทั่วไป) MODULE ═══ */
+var trData=[];var trURL='';var trCharts={};
+function trGetUrl(){return localStorage.getItem('tr-sheet-url')||''}
+function trSaveUrl(){var u=document.getElementById('trSheetUrl').value.trim();if(!u)return;localStorage.setItem('tr-sheet-url',u);trURL=u;trShowSS('✅ บันทึกแล้ว','success');trTestConn()}
+function trTestConn(){
+  trURL=trGetUrl();if(!trURL){trShowSS('❌ ยังไม่ได้ใส่ URL','error');return}
+  trShowSS('🔗 ทดสอบ...','loading');
+  fetch(trURL+'?action=getAll').then(r=>r.json()).then(d=>{
+    if(Array.isArray(d)){trShowSS('✅ เชื่อมต่อสำเร็จ! '+d.length+' รายการ','success');trData=d;trUpdateAll()}
+    else throw new Error('Invalid')
+  }).catch(e=>{trShowSS('❌ '+e.message,'error')})
+}
+function trShowSS(m,t){var e=document.getElementById('trSetupSt');e.className='tr-st show '+t;e.innerHTML=m;if(t==='success')setTimeout(function(){e.classList.remove('show')},3000)}
+
+function trLoadData(){
+  trURL=trGetUrl();
+  if(trURL){
+    trShowSt('🔄 โหลดจาก Sheets...','loading');
+    fetch(trURL+'?action=getAll').then(r=>r.json()).then(d=>{trData=d;trShowSt('✅ โหลด '+d.length+' รายการ','success');trUpdateAll()}).catch(e=>{trData=[];trShowSt('❌ '+e.message,'error');trUpdateAll()})
+  }else{
+    try{var s=localStorage.getItem('tr-waste-data');if(s)trData=JSON.parse(s)}catch(e){trData=[]}
+    trUpdateAll();
+  }
+}
+function trSaveItems(items){
+  trURL=trGetUrl();
+  if(trURL){fetch(trURL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'add',items:items})}).catch(function(){})}
+  else{try{localStorage.setItem('tr-waste-data',JSON.stringify(trData))}catch(e){}}
+}
+
+function trParse(){
+  var text=document.getElementById('trInput').value.trim();
+  if(!text){trShowSt('กรุณาวางข้อความก่อน','error');return}
+  var btn=document.getElementById('trParseBtn');btn.disabled=true;
+  trShowSt('🤖 กำลังอ่านข้อมูล...','loading');
+  var now=new Date(),cm=now.getMonth()+1,cy=now.getFullYear()+543;
+  fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2000,
+      system:'You extract daily waste data from Thai hospital LINE chat. Return ONLY valid JSON array.\n\nEach item: {"point":"<n>","kg":<number>,"date":"<DD/MM/YY>"}\n\nCOLLECTION POINTS (standardize):\n- "เวชปฏิบัติ"\n- "ห้อง Lab"\n- "กายภาพ"\n- "ตึกผู้ป่วยใน"\n- "ฉุกเฉิน/OPD"\n- "ตึกกลาง/LR"\n- "ทันตกรรม"\n- "แผนไทย"\n- "ซับพลาย"\n\nWEIGHT: ขีด=0.1กก., โล=กก.\nDATE: DD/MM/YY Buddhist. If no date use previous entry date.\nIgnore sender names.\n\nExample: [{"point":"เวชปฏิบัติ","kg":1,"date":"01/04/69"}]',
+      messages:[{role:"user",content:text}]
+    })
+  }).then(r=>r.json()).then(function(data){
+    var content=data.content.map(function(b){return b.text||''}).join('');
+    var parsed=JSON.parse(content.replace(/```json|```/g,'').trim());
+    if(!Array.isArray(parsed)||!parsed.length){trShowSt('❌ อ่านไม่ได้','error');btn.disabled=false;return}
+    var items=[];
+    parsed.forEach(function(item){
+      if(item.point&&item.kg>0){
+        var parts=(item.date||'').split('/');
+        var day=Number(parts[0])||1,mon=Number(parts[1])||cm,yr=Number(parts[2])||(cy%100);
+        var row={id:String(Date.now())+String(Math.random()).slice(2,7),point:item.point,kg:Math.round(Number(item.kg)*100)/100,day:day,month:mon,year:2500+yr,date:String(day).padStart(2,'0')+'/'+String(mon).padStart(2,'0')+'/'+yr,addedAt:new Date().toISOString()};
+        trData.push(row);items.push(row);
+      }
+    });
+    if(items.length){trSaveItems(items);trUpdateAll();trShowSt('✅ เพิ่ม '+items.length+' รายการ','success');document.getElementById('trInput').value=''}
+    else trShowSt('❌ ไม่พบข้อมูล','error');
+    btn.disabled=false;
+  }).catch(function(e){trShowSt('❌ '+e.message,'error');btn.disabled=false})
+}
+
+function trShowSt(m,t){var e=document.getElementById('trStatus');e.className='tr-st show '+t;e.innerHTML=m;if(t==='success')setTimeout(function(){e.classList.remove('show')},4000)}
+function trUpdateAll(){trUpdateKPI();trRenderCharts();trRenderTbl();trRenderPt();trRenderDay();trRenderMon()}
+function trUpdateKPI(){
+  document.getElementById('trKRec').textContent=trData.length;
+  document.getElementById('trKKg').textContent=trData.reduce(function(s,d){return s+(Number(d.kg)||0)},0).toLocaleString(undefined,{maximumFractionDigits:1});
+  document.getElementById('trKPt').textContent=new Set(trData.map(function(d){return d.point})).size;
+  document.getElementById('trKDay').textContent=new Set(trData.map(function(d){return d.date})).size;
+}
+
+var TR_COLORS={'เวชปฏิบัติ':'#0f766e','ห้อง Lab':'#0284c7','กายภาพ':'#7c3aed','ตึกผู้ป่วยใน':'#dc2626','ฉุกเฉิน/OPD':'#d97706','ตึกกลาง/LR':'#0891b2','ทันตกรรม':'#db2777','แผนไทย':'#16a34a','ซับพลาย':'#f59e0b'};
+var TR_CL=Object.values(TR_COLORS);
+function trPtColor(n){return TR_COLORS[n]||TR_CL[Object.keys(TR_COLORS).indexOf(n)%TR_CL.length]||'#64748b'}
+
+function trDc(id){if(trCharts[id]){trCharts[id].destroy();delete trCharts[id]}}
+function trRenderCharts(){
+  if(!trData.length){['trCBar','trCPie','trCTrend'].forEach(trDc);return}
+  var cc=getChartColors();
+  var pm={};trData.forEach(function(d){pm[d.point]=(pm[d.point]||0)+(Number(d.kg)||0)});
+  var pts=Object.entries(pm).sort(function(a,b){return b[1]-a[1]});
+  var pn=pts.map(function(p){return p[0]}),pv=pts.map(function(p){return Math.round(p[1]*10)/10}),pc=pn.map(trPtColor);
+  trDc('trCBar');
+  trCharts.trCBar=safeChart('trCBar',{type:'bar',data:{labels:pn,datasets:[{data:pv,backgroundColor:pc.map(function(c){return c+'cc'}),borderRadius:6,borderSkipped:false,maxBarThickness:36,barPercentage:0.7}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:cc.g}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+  trDc('trCPie');
+  trCharts.trCPie=safeChart('trCPie',{type:'doughnut',data:{labels:pn.map(function(n,i){return n+' '+pv[i]+' กก.'}),datasets:[{data:pv,backgroundColor:pc,borderWidth:2,borderColor:bdr()}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9.5},padding:6}}}}});
+  var thM=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  var mm={};trData.forEach(function(d){var k=d.year+'-'+d.month;if(!mm[k])mm[k]={kg:0,month:Number(d.month),year:Number(d.year)};mm[k].kg+=Number(d.kg)||0});
+  var mons=Object.values(mm).sort(function(a,b){return(a.year*100+a.month)-(b.year*100+b.month)});
+  trDc('trCTrend');
+  trCharts.trCTrend=safeChart('trCTrend',{type:'line',data:{labels:mons.map(function(m){return(thM[m.month]||m.month)+' '+m.year%100}),datasets:[{data:mons.map(function(m){return Math.round(m.kg*10)/10}),borderColor:'#0f766e',backgroundColor:'rgba(15,118,110,.06)',fill:true,tension:.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#0f766e',pointBorderColor:bdr(),pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.parsed.y.toLocaleString()+' กก.'}}}},scales:{y:{beginAtZero:true,grid:{color:cc.g},ticks:{callback:function(v){return v+' กก.'}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}});
+}
+
+function trRenderTbl(){
+  var el=document.getElementById('trTblData');
+  if(!trData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3)"><div style="font-size:40px;margin-bottom:8px">📋</div><p>ยังไม่มีข้อมูล</p></div>';return}
+  var h='<table style="width:100%;border-collapse:separate;border-spacing:0 2px;font-size:12px"><thead><tr><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:5px 8px">วันที่</td><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:5px 8px">จุดเก็บ</td><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:5px 8px;text-align:right">กก.</td><td></td></tr></thead><tbody>';
+  trData.slice().sort(function(a,b){var pa=(a.date||'').split('/').map(Number),pb=(b.date||'').split('/').map(Number);return(pb[2]*10000+pb[1]*100+pb[0])-(pa[2]*10000+pa[1]*100+pa[0])}).forEach(function(d){
+    var c=trPtColor(d.point);
+    h+='<tr><td style="padding:6px 8px">'+d.date+'</td><td style="padding:6px 8px"><span class="tr-badge" style="background:'+c+'15;color:'+c+'">'+d.point+'</span></td><td style="padding:6px 8px;text-align:right;font-weight:700">'+(Number(d.kg)||0).toLocaleString(undefined,{maximumFractionDigits:1})+'</td><td style="padding:6px 8px"><button style="background:none;border:none;color:#dc2626;cursor:pointer;opacity:.35;font-size:13px" onclick="trDelR(\''+d.id+'\')">✕</button></td></tr>'});
+  el.innerHTML=h+'</tbody></table>';
+}
+
+function trRenderPt(){
+  var el=document.getElementById('trPtCards');
+  if(!trData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3)">📍 ยังไม่มีข้อมูล</div>';return}
+  var pm={};trData.forEach(function(d){var k=Number(d.kg)||0;if(!pm[d.point])pm[d.point]={kg:0,n:0};pm[d.point].kg+=k;pm[d.point].n++});
+  var total=trData.reduce(function(s,d){return s+(Number(d.kg)||0)},0);
+  var h='<div class="cgr">';
+  Object.entries(pm).sort(function(a,b){return b[1].kg-a[1].kg}).forEach(function(e){
+    var name=e[0],data=e[1],pct=total>0?Math.round(data.kg/total*100):0,c=trPtColor(name);
+    h+='<div class="cc"><h3 style="color:'+c+'">📍 '+name+' <span style="font-size:11px;font-weight:500;color:var(--t3);margin-left:auto">'+pct+'%</span></h3><div style="display:flex;gap:10px"><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:'+c+'0a"><div style="font-family:Kanit;font-size:20px;font-weight:800;color:'+c+'">'+data.kg.toLocaleString(undefined,{maximumFractionDigits:1})+'</div><div style="font-size:9px;color:var(--t3)">กก.</div></div><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:rgba(0,0,0,.02)"><div style="font-family:Kanit;font-size:20px;font-weight:800;color:var(--t2)">'+data.n+'</div><div style="font-size:9px;color:var(--t3)">รายการ</div></div></div></div>'});
+  el.innerHTML=h+'</div>';
+}
+
+function trRenderDay(){
+  var el=document.getElementById('trDayCards');
+  if(!trData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3)">📅 ยังไม่มีข้อมูล</div>';return}
+  var dm={};trData.forEach(function(d){if(!dm[d.date])dm[d.date]={points:{}};dm[d.date].points[d.point]=(dm[d.date].points[d.point]||0)+(Number(d.kg)||0)});
+  var sorted=Object.entries(dm).sort(function(a,b){var pa=a[0].split('/').map(Number),pb=b[0].split('/').map(Number);return(pb[2]*10000+pb[1]*100+pb[0])-(pa[2]*10000+pa[1]*100+pa[0])});
+  var h='';
+  sorted.forEach(function(e){
+    var date=e[0],pts=Object.entries(e[1].points).sort(function(a,b){return b[1]-a[1]});
+    var total=pts.reduce(function(s,p){return s+p[1]},0);
+    h+='<div class="cc" style="margin-bottom:12px"><h3>📅 '+date+'</h3><div style="font-family:Kanit;font-size:18px;font-weight:800;color:var(--t2);margin-bottom:6px">'+total.toLocaleString(undefined,{maximumFractionDigits:1})+' กก.</div><table style="width:100%;font-size:12px"><tbody>';
+    pts.forEach(function(p){var c=trPtColor(p[0]);h+='<tr><td style="padding:4px 8px"><span class="tr-badge" style="background:'+c+'15;color:'+c+'">'+p[0]+'</span></td><td style="padding:4px 8px;text-align:right;font-weight:600">'+p[1].toLocaleString(undefined,{maximumFractionDigits:1})+'</td></tr>'});
+    h+='<tr style="font-weight:700;border-top:2px solid var(--border)"><td style="padding:4px 8px">รวม</td><td style="padding:4px 8px;text-align:right">'+total.toLocaleString(undefined,{maximumFractionDigits:1})+'</td></tr></tbody></table></div>'});
+  el.innerHTML=h;
+}
+
+function trRenderMon(){
+  var el=document.getElementById('trMonCards');
+  if(!trData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3)">📆 ยังไม่มีข้อมูล</div>';return}
+  var thM=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  var mm={};trData.forEach(function(d){var k=d.year+'-'+d.month;if(!mm[k])mm[k]={month:Number(d.month),year:Number(d.year),points:{},days:new Set()};mm[k].points[d.point]=(mm[k].points[d.point]||0)+(Number(d.kg)||0);mm[k].days.add(d.date)});
+  var h='';
+  Object.values(mm).sort(function(a,b){return(b.year*100+b.month)-(a.year*100+a.month)}).forEach(function(m){
+    var pts=Object.entries(m.points).sort(function(a,b){return b[1]-a[1]});
+    var total=pts.reduce(function(s,p){return s+p[1]},0);
+    h+='<div class="cc" style="margin-bottom:12px"><h3>📆 '+(thM[m.month]||m.month)+' '+m.year+'</h3><div style="display:flex;gap:10px;margin-bottom:8px"><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:rgba(100,116,139,.05)"><div style="font-family:Kanit;font-size:22px;font-weight:800;color:var(--t2)">'+total.toLocaleString(undefined,{maximumFractionDigits:1})+'</div><div style="font-size:9px;color:var(--t3)">กก.</div></div><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:rgba(15,118,110,.05)"><div style="font-family:Kanit;font-size:22px;font-weight:800;color:#0f766e">'+m.days.size+'</div><div style="font-size:9px;color:var(--t3)">วัน</div></div><div style="flex:1;text-align:center;padding:8px;border-radius:8px;background:rgba(124,58,237,.05)"><div style="font-family:Kanit;font-size:22px;font-weight:800;color:#7c3aed">'+pts.length+'</div><div style="font-size:9px;color:var(--t3)">จุด</div></div></div><table style="width:100%;font-size:12px"><thead><tr><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:4px 8px">จุดเก็บ</td><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:4px 8px;text-align:right">กก.</td><td style="font-size:9.5px;font-weight:700;color:var(--t3);padding:4px 8px;text-align:right">%</td></tr></thead><tbody>';
+    pts.forEach(function(p){var c=trPtColor(p[0]);h+='<tr><td style="padding:4px 8px"><span class="tr-badge" style="background:'+c+'15;color:'+c+'">'+p[0]+'</span></td><td style="padding:4px 8px;text-align:right;font-weight:600">'+p[1].toLocaleString(undefined,{maximumFractionDigits:1})+'</td><td style="padding:4px 8px;text-align:right;color:var(--t3)">'+Math.round(p[1]/total*100)+'%</td></tr>'});
+    h+='<tr style="font-weight:700;border-top:2px solid var(--border)"><td style="padding:4px 8px">รวม</td><td style="padding:4px 8px;text-align:right">'+total.toLocaleString(undefined,{maximumFractionDigits:1})+'</td><td style="padding:4px 8px;text-align:right">100%</td></tr></tbody></table></div>'});
+  el.innerHTML=h;
+}
+
+function trSw(v,tab){['overview','bypoint','daily','monthly','table'].forEach(function(x){document.getElementById('tr-'+x).style.display=x===v?'':'none'});tab.closest('.ybar').querySelectorAll('.wybtn').forEach(function(t){t.classList.remove('active')});tab.classList.add('active');if(v==='overview')trRenderCharts()}
+function trDelR(id){if(!confirm('ลบ?'))return;trData=trData.filter(function(d){return d.id!==id});trURL=trGetUrl();if(trURL){fetch(trURL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',id:id})}).catch(function(){})}else{try{localStorage.setItem('tr-waste-data',JSON.stringify(trData))}catch(e){}}trUpdateAll()}
+function trClearAll(){if(!confirm('ล้างข้อมูลทั้งหมด?'))return;trData=[];trURL=trGetUrl();if(trURL){fetch(trURL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'clearAll'})}).catch(function(){})}else{try{localStorage.setItem('tr-waste-data',JSON.stringify([]))}catch(e){}}trUpdateAll()}
+function trExpCSV(){if(!trData.length)return;var c='วันที่,จุดเก็บ,น้ำหนัก(กก.)\n';trData.forEach(function(d){c+=d.date+','+d.point+','+d.kg+'\n'});var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv'}));a.download='waste_data.csv';a.click()}
+// Init saved URL
+(function(){trURL=trGetUrl();if(trURL){var el=document.getElementById('trSheetUrl');if(el)el.value=trURL}})();
 
 /* ═══ ANIMATION ENGINE ═══ */
 
