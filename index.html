@@ -1617,16 +1617,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="tr-input">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
     <h3 style="font-family:'Kanit';font-size:14px;font-weight:700;color:var(--accent);margin:0">📋 บันทึกข้อมูลขยะ</h3>
-    <details style="position:relative">
-      <summary style="font-size:10.5px;color:var(--accent);cursor:pointer;font-weight:600">📱 วาง LINE</summary>
-      <div style="position:absolute;right:0;top:24px;width:340px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:10">
-        <textarea id="trInput" style="width:100%;min-height:70px;border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px;resize:vertical" placeholder="วางข้อความจาก LINE..."></textarea>
-        <div style="display:flex;gap:6px;margin-top:6px">
-          <button class="ybtn" id="trParseBtn" onclick="trParse()" style="padding:4px 12px;font-size:10.5px;flex:1">📱 อ่านข้อมูล</button>
-          <button class="ybtn" onclick="document.getElementById('trInput').value=''" style="padding:4px 12px;font-size:10.5px;background:transparent;color:var(--t3);border:1px solid var(--border)">ล้าง</button>
-        </div>
-      </div>
-    </details>
   </div>
   <div class="tr-form">
     <div>
@@ -1658,6 +1648,16 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
     <button class="ybtn" onclick="trAddManual()" style="padding:8px 18px;font-size:12px;white-space:nowrap;border-radius:8px">➕ เพิ่ม</button>
   </div>
   <div class="tr-st" id="trStatus"></div>
+  <details style="margin-top:10px;border-top:1px solid var(--border);padding-top:10px">
+    <summary style="font-size:11px;color:var(--accent);cursor:pointer;font-weight:600">📱 วางข้อความจาก LINE (อ่านหลายรายการพร้อมกัน)</summary>
+    <div style="margin-top:8px">
+      <textarea id="trInput" style="width:100%;min-height:80px;border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11.5px;resize:vertical;background:var(--card)" placeholder="วางข้อความจาก LINE ได้เลย เช่น:&#10;01/4/69 จุดเวชปฏิบัติ ขยะทั่วไป 1กก.&#10;Lab 4โล&#10;กายภาพ 2กก.2ขีด"></textarea>
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <button class="ybtn" id="trParseBtn" onclick="trParse()" style="padding:6px 16px;font-size:11px">📱 อ่านข้อมูล</button>
+        <button class="ybtn" onclick="document.getElementById('trInput').value=''" style="padding:6px 16px;font-size:11px;background:transparent;color:var(--t3);border:1px solid var(--border)">ล้าง</button>
+      </div>
+    </div>
+  </details>
 </div>
 
 <!-- KPI — 3 cards only -->
@@ -1678,7 +1678,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 
 <div id="tr-overview">
   <div class="cgr">
-    <div class="cc"><h3>📍 ขยะแยกจุดเก็บ (กก.)</h3><div class="cw" style="height:230px"><canvas id="trCBar"></canvas></div></div>
+    <div class="cc"><h3>📍 ขยะแยกจุดเก็บ (กก.)</h3><div class="cw" style="height:320px"><canvas id="trCBar"></canvas></div></div>
     <div class="cc"><h3>🥧 สัดส่วนแยกจุด</h3><div class="cw" style="height:230px"><canvas id="trCPie"></canvas></div></div>
   </div>
   <div class="cc"><h3>📈 แนวโน้มรายเดือน</h3><div class="cw" style="height:220px"><canvas id="trCTrend"></canvas></div></div>
@@ -3012,7 +3012,7 @@ function trRenderCharts(){
   var pts=Object.entries(pm).sort(function(a,b){return b[1]-a[1]});
   var pn=pts.map(function(p){return p[0]}),pv=pts.map(function(p){return Math.round(p[1]*10)/10}),pc=pn.map(trPtColor);
   trDc('trCBar');
-  trCharts.trCBar=safeChart('trCBar',{type:'bar',data:{labels:pn,datasets:[{data:pv,backgroundColor:pc.map(function(c){return c+'cc'}),borderRadius:6,borderSkipped:false,maxBarThickness:36,barPercentage:0.7}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:cc.g}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+  trCharts.trCBar=safeChart('trCBar',{type:'bar',data:{labels:pn,datasets:[{data:pv,backgroundColor:pc.map(function(c){return c+'cc'}),borderRadius:6,borderSkipped:false,maxBarThickness:28,barPercentage:0.8}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:cc.g}},y:{grid:{display:false},ticks:{autoSkip:false,font:{size:10.5}}}}}});
   trDc('trCPie');
   trCharts.trCPie=safeChart('trCPie',{type:'doughnut',data:{labels:pn.map(function(n,i){return n+' '+pv[i]+' กก.'}),datasets:[{data:pv,backgroundColor:pc,borderWidth:2,borderColor:bdr()}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9.5},padding:6}}}}});
   var thM=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
