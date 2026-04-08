@@ -1600,8 +1600,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="topbar"><span class="topicon">🗑️</span><h1>ข้อมูลขยะทั่วไป</h1></div>
 <div class="pg-pad" id="trash-content">
 
-<!-- Setup Google Sheets -->
-<details class="tr-setup">
+<!-- Setup Google Sheets (URL ฝังแล้ว — ซ่อนไว้กรณีต้องเปลี่ยน) -->
+<details class="tr-setup" style="display:none">
   <summary>⚙️ ตั้งค่าเชื่อมต่อ Google Sheets</summary>
   <div style="margin-top:8px">
     <div style="display:flex;gap:6px;align-items:center">
@@ -1631,7 +1631,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--t1);min-h
         <option>ห้อง Lab</option>
         <option>กายภาพ</option>
         <option>ตึกผู้ป่วยใน</option>
-        <option>ฉุกเฉิน/OPD</option>
+        <option>ฉุกเฉิน/OPD/ห้องยา</option>
         <option>ตึกกลาง/LR</option>
         <option>ทันตกรรม</option>
         <option>แผนไทย</option>
@@ -2796,8 +2796,9 @@ function exportWord(pageId){
 }
 
 /* ═══ TRASH (ขยะทั่วไป) MODULE ═══ */
-var trData=[];var trURL='';var trCharts={};
-function trGetUrl(){return localStorage.getItem('tr-sheet-url')||''}
+var trData=[];var trURL='https://script.google.com/macros/s/AKfycbzyG85W10B0xVG-WISgErBI7eb-NdJAUoXEtYclIcU_YM1GCqSn5PPVpwaZhlhdf42Y/exec';var trCharts={};
+var TR_DEFAULT_URL='https://script.google.com/macros/s/AKfycbzyG85W10B0xVG-WISgErBI7eb-NdJAUoXEtYclIcU_YM1GCqSn5PPVpwaZhlhdf42Y/exec';
+function trGetUrl(){return localStorage.getItem('tr-sheet-url')||TR_DEFAULT_URL}
 function trSaveUrl(){var u=document.getElementById('trSheetUrl').value.trim();if(!u)return;localStorage.setItem('tr-sheet-url',u);trURL=u;trShowSS('✅ บันทึกแล้ว','success');trTestConn()}
 function trTestConn(){
   trURL=trGetUrl();if(!trURL){trShowSS('❌ ยังไม่ได้ใส่ URL','error');return}
@@ -2835,7 +2836,7 @@ function trParse(){
     {name:'ห้อง Lab',keys:['lab','lab.','แลบ','แลป','แล็บ','ห้องแลบ','ห้องแลป','ห้อง lab','ห้องlab','ห้องแล็บ']},
     {name:'กายภาพ',keys:['กายภาพ','กายภาพบำบัด','กายภาพฯ']},
     {name:'ตึกผู้ป่วยใน',keys:['ผู้ป่วยใน','ipd','ตึกผู้ป่วย','วอร์ด','ward']},
-    {name:'ฉุกเฉิน/OPD',keys:['ฉุกเฉิน','ฉุเฉิน','opd','0pd','ผู้ป่วยนอก','อุบัติเหตุ','er','ตึกฉุก','ห้องยา']},
+    {name:'ฉุกเฉิน/OPD/ห้องยา',keys:['ฉุกเฉิน','ฉุเฉิน','opd','0pd','ผู้ป่วยนอก','อุบัติเหตุ','er','ตึกฉุก','ห้องยา']},
     {name:'ตึกกลาง/LR',keys:['ตึกกลาง','lr','ห้องคลอด','labor','เลเบอร์']},
     {name:'ทันตกรรม',keys:['ทันตกรรม','ทันต์','ทันต','ทันตะ','dental','ฟัน']},
     {name:'แผนไทย',keys:['แผนไทย','แพทย์แผนไทย','ttm','แผนไท']},
@@ -3000,7 +3001,7 @@ function trUpdateKPI(){
   document.getElementById('trKDay').textContent=new Set(trData.map(function(d){return d.date})).size;
 }
 
-var TR_COLORS={'เวชปฏิบัติ':'#0f766e','ห้อง Lab':'#0284c7','กายภาพ':'#7c3aed','ตึกผู้ป่วยใน':'#dc2626','ฉุกเฉิน/OPD':'#d97706','ตึกกลาง/LR':'#0891b2','ทันตกรรม':'#db2777','แผนไทย':'#16a34a','ซับพลาย':'#f59e0b','ห้องประชุม':'#6366f1','ห้องบริหาร':'#0369a1','ห้องผลิตยาสมุนไพร':'#059669'};
+var TR_COLORS={'เวชปฏิบัติ':'#0f766e','ห้อง Lab':'#0284c7','กายภาพ':'#7c3aed','ตึกผู้ป่วยใน':'#dc2626','ฉุกเฉิน/OPD/ห้องยา':'#d97706','ตึกกลาง/LR':'#0891b2','ทันตกรรม':'#db2777','แผนไทย':'#16a34a','ซับพลาย':'#f59e0b','ห้องประชุม':'#6366f1','ห้องบริหาร':'#0369a1','ห้องผลิตยาสมุนไพร':'#059669'};
 var TR_CL=Object.values(TR_COLORS);
 function trPtColor(n){return TR_COLORS[n]||TR_CL[Object.keys(TR_COLORS).indexOf(n)%TR_CL.length]||'#64748b'}
 
